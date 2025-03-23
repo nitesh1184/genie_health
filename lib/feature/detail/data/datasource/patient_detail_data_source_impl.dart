@@ -17,7 +17,7 @@ class PatientDetailDataSourceImpl extends PatientDetailDataSource {
       token: token,
     );
     if (response.statusCode == 200) {
-      return PatientResponseModel.fromJson(response.data);
+      return PatientModel.fromJson(response.data);
     } else {
       throw const ServerException();
     }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heath_genie/feature/common/widgets/app_genie_button.dart';
-import 'package:heath_genie/feature/common/widgets/genie_app_bar.dart';
+import '../../../common/widgets/app_scafold.dart';
 
 class SpyroTestScreen extends StatelessWidget {
   final String? type;
@@ -13,8 +13,8 @@ class SpyroTestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: GenieAppBar(username: '$type Test'),
+    return AppScaffold(
+      username: '$type Test',
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

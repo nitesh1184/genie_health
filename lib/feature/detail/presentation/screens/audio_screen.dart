@@ -8,7 +8,7 @@ import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 
 import '../../../../core/Depenency_injections/app_injector.dart';
 import '../../../common/user/cubit/user_cubit.dart';
-import '../../../common/widgets/genie_app_bar.dart';
+import '../../../common/widgets/app_scafold.dart';
 
 class AudioScreen extends StatelessWidget {
   const AudioScreen({super.key});
@@ -19,8 +19,8 @@ class AudioScreen extends StatelessWidget {
     final userName = user!.name;
     return BlocProvider(
       create: (context) => sl<PatientDetailCubit>()..getDetails(),
-      child: Scaffold(
-        appBar: GenieAppBar(username: userName),
+      child: AppScaffold(
+        username: userName,
         body: BlocBuilder<PatientDetailCubit, PatientDataState>(
           builder: (context, state) {
             if (state is PatientDataLoading) {
@@ -28,7 +28,7 @@ class AudioScreen extends StatelessWidget {
             } else if (state is PatientDataFailure) {
               return Center(child: Text('Error: ${state.message}'));
             } else if (state is PatientDataSuccess) {
-              final user = state.data;
+              final patient = state.data;
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -38,12 +38,15 @@ class AudioScreen extends StatelessWidget {
                         Text(
                           'Name:',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Spacer(),
-                        Text(user.name, style: TextStyle(fontSize: 24)),
+                        Text(
+                          patient.name.string,
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -52,12 +55,15 @@ class AudioScreen extends StatelessWidget {
                         Text(
                           'Uhid:',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Spacer(),
-                        Text(user.uhid, style: TextStyle(fontSize: 24)),
+                        Text(
+                          patient.uhid.string,
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -66,21 +72,25 @@ class AudioScreen extends StatelessWidget {
                         Text(
                           'Labour ID:',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Spacer(),
-                        Text(user.labourId, style: TextStyle(fontSize: 24)),
+                        Text(
+                          patient.labourId.string,
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ],
                     ),
                     SizedBox(height: 20),
                     SizedBox(
-                      height: 120,
+                      height: 80,
+                      width: MediaQuery.of(context).size.width * 0.65,
                       child: SfBarcodeGenerator(
-                        value: state.data.labourId,
+                        value: state.data.labourId.string,
                         symbology: Code128(),
-                        showValue: true,
+                        showValue: false,
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -107,6 +117,7 @@ class AudioScreen extends StatelessWidget {
                       buttonText: '2000HZ',
                       backgroundColor: Colors.blue,
                     ),
+                    const SizedBox(height: 20),
                     AppGenieButton(
                       onPressed: () {
                         showDialogBox(context);
@@ -125,7 +136,7 @@ class AudioScreen extends StatelessWidget {
     );
   }
 
-  void showDialogBox(BuildContext context){
+  void showDialogBox(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {

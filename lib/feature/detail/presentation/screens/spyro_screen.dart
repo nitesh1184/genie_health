@@ -6,7 +6,7 @@ import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 
 import '../../../../core/Depenency_injections/app_injector.dart';
 import '../../../common/user/cubit/user_cubit.dart';
-import '../../../common/widgets/genie_app_bar.dart';
+import '../../../common/widgets/app_scafold.dart';
 import '../cubit/patient_detail_cubit.dart';
 import '../cubit/patient_detail_state.dart';
 
@@ -27,8 +27,8 @@ class SpyroState extends State<SpyroScreen> {
     final userName = user!.name;
     return BlocProvider(
       create: (context) => sl<PatientDetailCubit>()..getDetails(),
-      child: Scaffold(
-        appBar: GenieAppBar(username: userName),
+      child: AppScaffold(
+        username: userName,
         body: BlocBuilder<PatientDetailCubit, PatientDataState>(
           builder: (context, state) {
             if (state is PatientDataLoading) {
@@ -48,7 +48,10 @@ class SpyroState extends State<SpyroScreen> {
                           ),
                         ),
                         Spacer(),
-                        Text(state.data.name, style: TextStyle(fontSize: 18)),
+                        Text(
+                          state.data.name.string,
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -62,7 +65,10 @@ class SpyroState extends State<SpyroScreen> {
                           ),
                         ),
                         Spacer(),
-                        Text(state.data.uhid, style: TextStyle(fontSize: 18)),
+                        Text(
+                          state.data.uhid.string,
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -77,25 +83,26 @@ class SpyroState extends State<SpyroScreen> {
                         ),
                         Spacer(),
                         Text(
-                          state.data.labourId,
+                          state.data.labourId.string,
                           style: TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
                     SizedBox(height: 30),
                     SizedBox(
-                      height: 90,
+                      height: 80,
+                      width: MediaQuery.of(context).size.width * 0.65,
                       child: SfBarcodeGenerator(
-                        value: state.data.labourId,
+                        value: state.data.labourId.string,
                         symbology: Code128(),
-                        showValue: true,
+                        showValue: false,
                       ),
                     ),
                     SizedBox(height: 20),
 
                     AppGenieButton(
                       backgroundColor:
-                          fev1Recorded ? Colors.white30 : Colors.blue,
+                          fev1Recorded ?Colors.blue: Colors.white30,
                       onPressed: () async {
                         context.pushNamed(
                           "spyroTest",
@@ -108,7 +115,7 @@ class SpyroState extends State<SpyroScreen> {
                     SizedBox(height: 20),
                     AppGenieButton(
                       backgroundColor:
-                          fev6Recorded ? Colors.white30 : Colors.blue,
+                          fev6Recorded ?Colors.blue: Colors.white30,
 
                       onPressed: () async {
                         context.pushNamed(
@@ -128,8 +135,8 @@ class SpyroState extends State<SpyroScreen> {
                         buttonText: "Submit",
                         backgroundColor:
                             fev1Recorded && fev6Recorded
-                                ? Colors.white30
-                                : Colors.blue,
+                                ?Colors.blue: Colors.white30
+                                ,
                       ),
                     ),
                   ],

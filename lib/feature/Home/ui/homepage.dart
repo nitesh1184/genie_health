@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heath_genie/feature/common/widgets/app_genie_button.dart';
-import 'package:heath_genie/feature/common/widgets/genie_app_bar.dart';
-
 import '../../common/bar_code_cubit.dart';
 import '../../common/user/cubit/user_cubit.dart';
+import '../../common/widgets/app_scafold.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -24,8 +23,8 @@ class HomeScreen extends StatelessWidget {
     final role = user.role;
     final TextEditingController barcodeController = TextEditingController();
     return SafeArea(
-      child: Scaffold(
-        appBar: GenieAppBar(username: userName),
+      child: AppScaffold(
+        username: userName,
         body: Column(
           children: [
             const SizedBox(height: 20),
@@ -45,15 +44,18 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20.0),
               child: BlocConsumer<BarcodeCubit, String?>(
                 listener: (context, barcode) {
-                  if (barcode != null) {
+                  if(barcode==null || barcode.isEmpty){
+                    barcodeController.clear();
+                  }
+                  else {
                     switch (role) {
-                      case 'doctor':
+                      case 'Doctor':
                         Future.microtask(() => context.push('/doctorScreen'));
                         break;
                       case 'spyro':
                         Future.microtask(() => context.push('/spyroScreen'));
                         break;
-                      case 'Opto':
+                      case 'opto':
                         Future.microtask(() => context.push('/optoScreen'));
                         break;
                       case 'audio':

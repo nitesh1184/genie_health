@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class GenieAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String username;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const GenieAppBar({super.key, required this.username});
+  const GenieAppBar({
+    super.key,
+    required this.username,
+    required this.scaffoldKey,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +18,7 @@ class GenieAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         children: [
           const SizedBox(width: 8),
-          Text(
-            "Welcome ",
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
+          Text("Welcome ", style: TextStyle(color: Colors.white, fontSize: 18)),
           Text(
             username,
             style: TextStyle(color: Colors.orangeAccent, fontSize: 18),
@@ -26,8 +28,10 @@ class GenieAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 12.0),
-          child: GestureDetector(
-            onTap: () => Scaffold.of(context).openDrawer(),
+          child: InkWell(
+            onTap: () {
+              scaffoldKey.currentState?.openEndDrawer();
+            },
             child: CircleAvatar(
               backgroundColor: Colors.white,
               radius: 16,

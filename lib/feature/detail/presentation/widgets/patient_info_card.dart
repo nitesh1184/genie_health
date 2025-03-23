@@ -22,10 +22,10 @@ class UserInfoCard extends StatelessWidget {
             children: [
               Text(
                 'Name:',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Spacer(),
-              Text(state.data.name, style: TextStyle(fontSize: 24)),
+              Text(state.data.name.string, style: TextStyle(fontSize: 18)),
             ],
           ),
           SizedBox(height: 20),
@@ -33,10 +33,10 @@ class UserInfoCard extends StatelessWidget {
             children: [
               Text(
                 'Uhid:',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Spacer(),
-              Text(state.data.uhid, style: TextStyle(fontSize: 24)),
+              Text(state.data.uhid.string, style: TextStyle(fontSize: 18)),
             ],
           ),
           SizedBox(height: 20),
@@ -44,19 +44,20 @@ class UserInfoCard extends StatelessWidget {
             children: [
               Text(
                 'Labour ID:',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Spacer(),
-              Text(state.data.labourId, style: TextStyle(fontSize: 24)),
+              Text(state.data.labourId.string, style: TextStyle(fontSize: 18)),
             ],
           ),
           SizedBox(height: 20),
           SizedBox(
-            height: 120,
+            height: 80,
+            width: MediaQuery.of(context).size.width * 0.65,
             child: SfBarcodeGenerator(
-              value: state.data.labourId,
+              value: state.data.labourId.string,
               symbology: Code128(),
-              showValue: true,
+              showValue: false,
             ),
           ),
         ],

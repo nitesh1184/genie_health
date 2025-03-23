@@ -35,7 +35,7 @@ class LoginScreen extends StatelessWidget {
               if (state is LoginSuccess) {
                 context.read<UserCubit>().saveUser(state.data);
                 Future.microtask(
-                  () => context.push('/home'),
+                  () => context.go('/home'),
                 ); // Navigate to HomeScreen
               }
             },
