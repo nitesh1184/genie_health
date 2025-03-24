@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:heath_genie/core/utils/constants.dart';
 import 'package:heath_genie/feature/common/widgets/app_genie_button.dart';
 import 'package:heath_genie/feature/common/widgets/genie_app_dialog.dart';
 import 'package:heath_genie/feature/detail/presentation/cubit/patient_detail_cubit.dart';
@@ -26,6 +27,7 @@ class AudioScreen extends StatelessWidget {
             if (state is PatientDataLoading) {
               return Center(child: CircularProgressIndicator());
             } else if (state is PatientDataFailure) {
+              showDialogBox(context, 'Something went wrong', state.message);
               return Center(child: Text('Error: ${state.message}'));
             } else if (state is PatientDataSuccess) {
               final patient = state.data;
@@ -96,7 +98,11 @@ class AudioScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     AppGenieButton(
                       onPressed: () {
-                        showDialogBox(context);
+                        showDialogBox(
+                          context,
+                          Constants.feature_title,
+                          Constants.feature_message,
+                        );
                       },
                       backgroundColor: Colors.blue,
                       buttonText: '500HZ',
@@ -104,7 +110,11 @@ class AudioScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     AppGenieButton(
                       onPressed: () {
-                        showDialogBox(context);
+                        showDialogBox(
+                          context,
+                          Constants.feature_title,
+                          Constants.feature_message,
+                        );
                       },
                       buttonText: '1000HZ',
                       backgroundColor: Colors.blue,
@@ -112,7 +122,11 @@ class AudioScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     AppGenieButton(
                       onPressed: () {
-                        showDialogBox(context);
+                        showDialogBox(
+                          context,
+                          Constants.feature_title,
+                          Constants.feature_message,
+                        );
                       },
                       buttonText: '2000HZ',
                       backgroundColor: Colors.blue,
@@ -120,7 +134,11 @@ class AudioScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     AppGenieButton(
                       onPressed: () {
-                        showDialogBox(context);
+                        showDialogBox(
+                          context,
+                          Constants.feature_title,
+                          Constants.feature_message,
+                        );
                       },
                       buttonText: '4000HZ',
                       backgroundColor: Colors.blue,
@@ -136,14 +154,11 @@ class AudioScreen extends StatelessWidget {
     );
   }
 
-  void showDialogBox(BuildContext context) {
+  void showDialogBox(BuildContext context, String title, String message) {
     showDialog(
       context: context,
       builder: (context) {
-        return GenieAppDialog(
-          title: "Wait...",
-          message: "This feature is coming soon",
-        );
+        return GenieAppDialog(title: title, message: message);
       },
     );
   }

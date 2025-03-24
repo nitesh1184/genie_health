@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 
 import '../../../../core/Depenency_injections/app_injector.dart';
+import '../../../common/widgets/genie_app_dialog.dart';
 import '../cubit/patient_detail_cubit.dart';
 import '../cubit/patient_detail_state.dart';
 
@@ -55,6 +56,7 @@ class OxiMeterScreenState extends State<OxiMeterScreen> {
             if (state is PatientDataLoading) {
               return Center(child: CircularProgressIndicator());
             } else if (state is PatientDataFailure) {
+              showDialogBox(context, 'Something went wrong', state.message);
               return Center(child: Text('Error: ${state.message}'));
             } else if (state is PatientDataSuccess) {
               final patient = state.data;
@@ -170,6 +172,15 @@ class OxiMeterScreenState extends State<OxiMeterScreen> {
           },
         ),
       ),
+    );
+  }
+
+  void showDialogBox(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return GenieAppDialog(title: title, message: message);
+      },
     );
   }
 }

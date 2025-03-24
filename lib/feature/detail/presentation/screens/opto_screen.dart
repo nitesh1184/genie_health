@@ -6,6 +6,7 @@ import 'package:heath_genie/feature/detail/presentation/cubit/patient_detail_sta
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 
 import '../../../../core/Depenency_injections/app_injector.dart';
+import '../../../../core/utils/constants.dart';
 import '../../../common/user/cubit/user_cubit.dart';
 import '../../../common/widgets/app_scafold.dart';
 import '../../../common/widgets/genie_app_dialog.dart';
@@ -26,6 +27,7 @@ class OptoDetailScreen extends StatelessWidget {
             if (state is PatientDataLoading) {
               return Center(child: CircularProgressIndicator());
             } else if (state is PatientDataFailure) {
+              showDialogBox(context, 'Something went wrong', state.message);
               return Center(child: Text('Error: ${state.message}'));
             } else if (state is PatientDataSuccess) {
               final patient = state.data;
@@ -96,7 +98,11 @@ class OptoDetailScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     AppGenieButton(
                       onPressed: () {
-                        showDialogBox(context);
+                        showDialogBox(
+                          context,
+                          Constants.feature_title,
+                          Constants.feature_message,
+                        );
                       },
                       backgroundColor: Colors.blue,
                       buttonText: 'RE',
@@ -104,7 +110,11 @@ class OptoDetailScreen extends StatelessWidget {
                     const SizedBox(height: 40),
                     AppGenieButton(
                       onPressed: () {
-                        showDialogBox(context);
+                        showDialogBox(
+                          context,
+                          Constants.feature_title,
+                          Constants.feature_message,
+                        );
                       },
                       buttonText: 'LE',
                       backgroundColor: Colors.blue,
@@ -120,14 +130,11 @@ class OptoDetailScreen extends StatelessWidget {
     );
   }
 
-  void showDialogBox(BuildContext context) {
+  void showDialogBox(BuildContext context, String title, String message) {
     showDialog(
       context: context,
       builder: (context) {
-        return GenieAppDialog(
-          title: "Wait...",
-          message: "This feature is coming soon",
-        );
+        return GenieAppDialog(title: title, message: message);
       },
     );
   }

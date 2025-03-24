@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/Depenency_injections/app_injector.dart';
 import '../../../common/user/cubit/user_cubit.dart';
 import '../../../common/widgets/app_genie_button.dart';
+import '../../../common/widgets/genie_app_dialog.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
 
@@ -28,9 +29,7 @@ class LoginScreen extends StatelessWidget {
           body: BlocConsumer<LoginCubit, LoginState>(
             listener: (context, state) {
               if (state is LoginFailure) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
+                showDialogBox(context, state.message);
               }
               if (state is LoginSuccess) {
                 context.read<UserCubit>().saveUser(state.data);
@@ -40,7 +39,8 @@ class LoginScreen extends StatelessWidget {
               }
             },
             builder: (context, state) {
-              return Column( // Column to ensure footer stays at the bottom
+              return Column(
+                // Column to ensure footer stays at the bottom
                 children: [
                   Expanded(
                     child: SingleChildScrollView(
@@ -83,17 +83,16 @@ class LoginScreen extends StatelessWidget {
                             state is LoginLoading
                                 ? CircularProgressIndicator()
                                 : AppGenieButton(
-                              onPressed: () =>
-                              {
-
-                                context.read<LoginCubit>().login(
-                                emailController.text,
-                                passwordController.text,
-                              ),
-                              },
-                              buttonText: 'Login',
-                              backgroundColor: Colors.blue,
-                            ),
+                                  onPressed:
+                                      () => {
+                                        context.read<LoginCubit>().login(
+                                          emailController.text,
+                                          passwordController.text,
+                                        ),
+                                      },
+                                  buttonText: 'Login',
+                                  backgroundColor: Colors.blue,
+                                ),
                             SizedBox(height: 60), // Extra spacing before footer
                           ],
                         ),
@@ -103,7 +102,7 @@ class LoginScreen extends StatelessWidget {
                   // Footer Section (Stays at Bottom)
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child:Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('Powered by'),
@@ -120,6 +119,15 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void showDialogBox(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return GenieAppDialog(title: 'What goes Wrong...', message: message);
+      },
     );
   }
 }

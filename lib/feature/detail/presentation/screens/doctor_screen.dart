@@ -9,6 +9,7 @@ import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 import '../../../../core/Depenency_injections/app_injector.dart';
 import '../../../common/user/cubit/user_cubit.dart';
 import '../../../common/widgets/app_scafold.dart';
+import '../../../common/widgets/genie_app_dialog.dart';
 
 class DoctorDetailScreen extends StatelessWidget {
   const DoctorDetailScreen({super.key});
@@ -26,6 +27,7 @@ class DoctorDetailScreen extends StatelessWidget {
             if (state is PatientDataLoading) {
               return Center(child: CircularProgressIndicator());
             } else if (state is PatientDataFailure) {
+              showDialogBox(context, 'Something went wrong', state.message);
               return Center(child: Text('Error: ${state.message}'));
             } else if (state is PatientDataSuccess) {
               final patient = state.data;
@@ -125,6 +127,15 @@ class DoctorDetailScreen extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+
+  void showDialogBox(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return GenieAppDialog(title: title, message: message);
+      },
     );
   }
 }

@@ -1,7 +1,11 @@
-class ServerException implements Exception{
+class ServerException implements Exception {
   const ServerException();
 }
 
-class NoInternetException implements Exception{
+class UnauthorizedException implements Exception {
+  const UnauthorizedException();
+}
+
+class NoInternetException implements Exception {
   const NoInternetException();
 }

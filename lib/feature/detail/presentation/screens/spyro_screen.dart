@@ -7,6 +7,7 @@ import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 import '../../../../core/Depenency_injections/app_injector.dart';
 import '../../../common/user/cubit/user_cubit.dart';
 import '../../../common/widgets/app_scafold.dart';
+import '../../../common/widgets/genie_app_dialog.dart';
 import '../cubit/patient_detail_cubit.dart';
 import '../cubit/patient_detail_state.dart';
 
@@ -33,6 +34,9 @@ class SpyroState extends State<SpyroScreen> {
           builder: (context, state) {
             if (state is PatientDataLoading) {
               return Center(child: CircularProgressIndicator());
+            } else if (state is PatientDataFailure) {
+              showDialogBox(context, 'Something went wrong', state.message);
+              return Center(child: Text('Error: ${state.message}'));
             } else if (state is PatientDataSuccess) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -102,7 +106,7 @@ class SpyroState extends State<SpyroScreen> {
 
                     AppGenieButton(
                       backgroundColor:
-                          fev1Recorded ?Colors.blue: Colors.white30,
+                          fev1Recorded ? Colors.blue : Colors.white30,
                       onPressed: () async {
                         context.pushNamed(
                           "spyroTest",
@@ -115,7 +119,7 @@ class SpyroState extends State<SpyroScreen> {
                     SizedBox(height: 20),
                     AppGenieButton(
                       backgroundColor:
-                          fev6Recorded ?Colors.blue: Colors.white30,
+                          fev6Recorded ? Colors.blue : Colors.white30,
 
                       onPressed: () async {
                         context.pushNamed(
@@ -135,8 +139,8 @@ class SpyroState extends State<SpyroScreen> {
                         buttonText: "Submit",
                         backgroundColor:
                             fev1Recorded && fev6Recorded
-                                ?Colors.blue: Colors.white30
-                                ,
+                                ? Colors.blue
+                                : Colors.white30,
                       ),
                     ),
                   ],
@@ -148,6 +152,15 @@ class SpyroState extends State<SpyroScreen> {
           },
         ),
       ),
+    );
+  }
+
+  void showDialogBox(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return GenieAppDialog(title: title, message: message);
+      },
     );
   }
 }

@@ -17,8 +17,12 @@ class LoginRepositoryImpl extends LoginRepository{
     try {
       final result = await loginDataSource.login(email, password);
       return Right(result);
-    } on ServerException catch(failure){
-      return Left(ServerFailure(message: failure.toString()));
+    } on UnauthorizedException {
+      return Left(UnauthorizedFailure(message: 'You have entered incorrect username and password')); // Handle 401 Unauthorized
+    } on NoInternetException {
+      return Left(NoInternetFailure(message: 'You are not connected to the internet, Please try connect to internet and try again')); // Handle No Internet
+    } on ServerException {
+      return Left(ServerFailure(message: 'There is some issue with service, please wait we are working on it')); // Generic server failure
     }
   }
 }
