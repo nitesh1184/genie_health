@@ -16,68 +16,44 @@ class PatientModel extends Patient {
     required super.gender,
     required super.mobile,
     required super.reportUrl,
+    required super.taluk,
+    required super.firstName,
+    required super.lastName,
+    required super.dateOfBirth,
     required super.createdBy,
     required super.updatedBy,
     required super.createdAt,
     required super.updatedAt,
     required super.campaignId,
+    required super.districtId,
   });
 
-  factory PatientModel.fromJson(Map<String, dynamic> json) {
-    return PatientModel(
-      uuid: json['uuid'],
-      registrationDate: DateTime.parse(json['registration_date']),
-      name: ResponseTypeModel.fromJson(json['name']),
-      billNo: ResponseTypeModel.fromJson(json['bill_no']),
-      tokenNo: ResponseTypeModel.fromJson(json['token_no']),
-      uhid: ResponseTypeModel.fromJson(json['uhid']),
-      paymentStatus: AgeModel.fromJson(json['payment_status']),
-      reportStatus: AgeModel.fromJson(json['report_status']),
-      barcode: ResponseTypeModel.fromJson(json['barcode']),
-      labourId: ResponseTypeModel.fromJson(json['labour_id']),
-      age: AgeModel.fromJson(json['age']),
-      gender: ResponseTypeModel.fromJson(json['gender']),
-      mobile: ResponseTypeModel.fromJson(json['mobile']),
-      reportUrl: ResponseTypeModel.fromJson(json['report_url']),
-      createdBy: CreatedTypeModel.fromJson(json['createdBy']),
-      updatedBy: CreatedTypeModel.fromJson(json['updatedBy']),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      campaignId: json['campaign_id'],
-    );
-  }
-}
+  factory PatientModel.fromJson(Map<String, dynamic> json) =>
+      PatientModel(
+        uuid: json["uuid"],
+        registrationDate: DateTime.parse(json["registration_date"]),
+        name: json["name"],
+        billNo: json["bill_no"],
+        tokenNo: json["token_no"],
+        uhid: json["uhid"],
+        paymentStatus: json["payment_status"],
+        reportStatus: json["report_status"],
+        barcode: json["barcode"],
+        labourId: json["labour_id"],
+        age: json["age"],
+        gender: json["gender"],
+        mobile: json["mobile"],
+        reportUrl: json["report_url"],
+        taluk: json["taluk"],
+        firstName: json["first_name"],
+        lastName: json["last_name"],
+        dateOfBirth: DateTime.parse(json["date_of_birth"]),
+        createdBy: json["created_by"],
+        updatedBy: json["updated_by"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+        campaignId: json["campaign_id"],
+        districtId: json["district_id"],
+      );
 
-class AgeModel extends Age {
-  AgeModel({required super.int16, required super.valid});
-
-  factory AgeModel.fromJson(Map<String, dynamic> json) {
-    return AgeModel(int16: json['Int16'], valid: json['Valid']);
-  }
-}
-
-class ResponseTypeModel extends ResponseType {
-  ResponseTypeModel({required super.string, required super.valid});
-
-  factory ResponseTypeModel.fromJson(Map<String, dynamic> json) {
-    return ResponseTypeModel(string: json['String'], valid: json['Valid']);
-  }
-}
-
-class CreatedTypeModel extends CreatedType {
-  CreatedTypeModel({
-    required super.uuid,
-    required super.name,
-    required super.userId,
-    required super.userType,
-  });
-
-  factory CreatedTypeModel.fromJson(Map<String, dynamic> json) {
-    return CreatedTypeModel(
-      uuid: json['uuid'],
-      name: ResponseTypeModel.fromJson(json['name']),
-      userId: ResponseTypeModel.fromJson(json['userId']),
-      userType: ResponseTypeModel.fromJson(json['userType']),
-    );
-  }
 }

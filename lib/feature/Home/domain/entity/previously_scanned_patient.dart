@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class Patient extends Equatable {
+class ScannedPatientList extends Equatable {
   final String uuid;
   final DateTime registrationDate;
   final String name;
@@ -26,7 +26,7 @@ class Patient extends Equatable {
   final String campaignId;
   final String districtId;
 
-  const Patient({
+  const ScannedPatientList({
     required this.uuid,
     required this.registrationDate,
     required this.name,
@@ -54,30 +54,26 @@ class Patient extends Equatable {
   });
 
   @override
-  List<Object> get props => [
-  uuid,
-  registrationDate,
-  name,
-  billNo,
-  tokenNo,
-  uhid,
-  paymentStatus,
-  reportStatus,
-  barcode,
-  labourId,
-  age,
-  gender,
-  mobile,
-  reportUrl,
-  taluk,
-  firstName,
-  lastName,
-  dateOfBirth,
-  createdBy,
-  updatedBy,
-  createdAt,
-  updatedAt,
-  campaignId,
-  districtId,
-  ];
+  List<Object> get props =>
+      [
+        uuid,
+        registrationDate,
+        name,
+        billNo,
+        tokenNo,
+        uhid,
+        paymentStatus,
+        reportStatus,
+        barcode,
+        labourId,
+        age,
+        gender,
+        mobile,
+        reportUrl,
+        createdBy,
+        updatedBy,
+        createdAt,
+        updatedAt,
+        campaignId,
+      ];
 }

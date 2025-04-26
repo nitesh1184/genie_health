@@ -13,11 +13,21 @@ class PatientDataLoading extends PatientDataState {}
 
 class PatientDataSuccess extends PatientDataState {
   final Patient data;
+  final bool isExpanded;
 
-  PatientDataSuccess(this.data);
+  PatientDataSuccess(this.data,this.isExpanded);
 
   @override
-  List<Object> get props => [data];
+  List<Object> get props => [data, isExpanded];
+}
+
+class PatientVisibilityToggleState extends PatientDataState {
+  final bool isExpanded;
+
+  PatientVisibilityToggleState(this.isExpanded);
+
+  @override
+  List<Object> get props => [isExpanded];
 }
 
 class PatientDataFailure extends PatientDataState {

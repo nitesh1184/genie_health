@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../bar_code_cubit.dart';
+import '../bar_code/bar_code_cubit.dart';
 import '../user/cubit/user_cubit.dart';
 import 'genie_app_bar.dart';
 

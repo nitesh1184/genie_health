@@ -21,6 +21,14 @@ class LoginSuccess extends LoginState {
   List<Object> get props => [data];
 }
 
+class PasswordVisibility extends LoginState{
+  final bool visibility;
+  PasswordVisibility(this.visibility);
+
+  @override
+  List<Object> get props => [visibility];
+}
+
 class LoginFailure extends LoginState {
   final String message;
 

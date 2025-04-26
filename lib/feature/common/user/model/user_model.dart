@@ -1,12 +1,12 @@
-class User {
+class UserHandler {
   final String name;
   final String role;
   final String email;
 
-  User({required this.name, required this.role, required this.email});
+  UserHandler({required this.name, required this.role, required this.email});
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory UserHandler.fromJson(Map<String, dynamic> json) {
+    return UserHandler(
       name: json['name'],
       role: json['role'],
       email: json['email'],

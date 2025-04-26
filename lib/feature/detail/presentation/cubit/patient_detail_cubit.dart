@@ -8,6 +8,7 @@ import '../../domain/usecase/patient_detail_usecase.dart';
 class PatientDetailCubit extends Cubit<PatientDataState> {
   final PatientDetailUseCase patientDetailUseCase;
   final SharedPreferences storage;
+  bool _isExpanded = true;
 
   PatientDetailCubit(this.patientDetailUseCase, this.storage)
     : super(PatientDataInitial());
@@ -22,6 +23,15 @@ class PatientDetailCubit extends Cubit<PatientDataState> {
       } else {
         emit(PatientDataFailure(failure.message)); // Generic error
       }
-    }, (data) => emit(PatientDataSuccess(data)));
+    }, (data) => emit(PatientDataSuccess(data, _isExpanded)));
+  }
+
+  void toggleExpanded() {
+    _isExpanded = !_isExpanded;
+    final currentState = state;
+    if (currentState is PatientDataSuccess) {
+      emit(PatientDataSuccess(currentState.data, _isExpanded));
+    }
   }
 }
+

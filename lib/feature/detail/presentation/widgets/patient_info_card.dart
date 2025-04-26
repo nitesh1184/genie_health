@@ -1,67 +1,97 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_barcodes/barcodes.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:heath_genie/feature/detail/presentation/widgets/patient_info_item.dart';
 
+import '../cubit/patient_detail_cubit.dart';
 import '../cubit/patient_detail_state.dart';
 
-class UserInfoCard extends StatelessWidget {
-  final PatientDataSuccess state;
-  const UserInfoCard({super.key, required this.state});
+class PatientInfoCard extends StatelessWidget {
+  final bool isExpanded;
+  final VoidCallback onToggleExpand;
+
+  const PatientInfoCard({
+    super.key,
+    required this.isExpanded,
+    required this.onToggleExpand,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.blue[100],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Name:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    int randomNum = 1 + Random().nextInt((6 + 1) - 1);
+    return BlocBuilder<PatientDetailCubit, PatientDataState>(
+      builder: (context, state) {
+        if (state is PatientDataLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is PatientDataFailure) {
+          return Center(child: Text(state.message));
+        } else if (state is PatientDataSuccess) {
+          final patient = state.data;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              Spacer(),
-              Text(state.data.name.string, style: TextStyle(fontSize: 18)),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Text(
-                'Uhid:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          'Patient Information',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            // Handle barcode view
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF245D51),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          icon: const Icon(Icons.qr_code, size: 18),
+                          label: const Text('View Barcode'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    if (isExpanded) ...[
+                      PatientInfoItem(title:'Name', value:patient.name),
+                      PatientInfoItem(title:'UHID', value:patient.uhid),
+                      PatientInfoItem(title:'Labour ID', value:patient.labourId),
+                      PatientInfoItem(title:'Age',value: '${patient.age} years'),
+                      PatientInfoItem(title:'Gender',value: patient.gender== 'M'? 'Male':'Female'),
+                      PatientInfoItem(title: 'Last Visit', value: '$randomNum Weeks ago'),
+                    ],
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        icon: Icon(
+                          isExpanded ? Icons.expand_less : Icons.expand_more,
+                        ),
+                        onPressed: onToggleExpand,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              Spacer(),
-              Text(state.data.uhid.string, style: TextStyle(fontSize: 18)),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Text(
-                'Labour ID:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Spacer(),
-              Text(state.data.labourId.string, style: TextStyle(fontSize: 18)),
-            ],
-          ),
-          SizedBox(height: 20),
-          SizedBox(
-            height: 80,
-            width: MediaQuery.of(context).size.width * 0.65,
-            child: SfBarcodeGenerator(
-              value: state.data.labourId.string,
-              symbology: Code128(),
-              showValue: false,
             ),
-          ),
-        ],
-      ),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
     );
   }
 }

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/Depenency_injections/app_injector.dart';
 import '../../../common/user/cubit/user_cubit.dart';
+import '../../../common/widgets/GenieAppProgressDialog.dart';
 import '../../../common/widgets/app_genie_button.dart';
 import '../../../common/widgets/genie_app_dialog.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
 
 class LoginScreen extends StatelessWidget {
+  bool _obscurePassword = true;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -20,16 +23,19 @@ class LoginScreen extends StatelessWidget {
       create: (_) => sl<LoginCubit>(),
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: const Color(0xFF0C7B79),
           resizeToAvoidBottomInset: true,
-          appBar: AppBar(
-            title: Text('Genie Health'),
-            centerTitle: true,
-            backgroundColor: Colors.blue,
-          ),
           body: BlocConsumer<LoginCubit, LoginState>(
             listener: (context, state) {
               if (state is LoginFailure) {
                 showDialogBox(context, state.message);
+              } else if (state is LoginLoading) {
+                GenieAppProgressDialog(
+                  text: 'Please wait, we are trying to sign you in...',
+                );
+              }
+              else if(state is PasswordVisibility){
+                _obscurePassword=state.visibility;
               }
               if (state is LoginSuccess) {
                 context.read<UserCubit>().saveUser(state.data);
@@ -39,81 +45,140 @@ class LoginScreen extends StatelessWidget {
               }
             },
             builder: (context, state) {
-              return Column(
-                // Column to ensure footer stays at the bottom
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+              return Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Dr. Raju\'s\n',
+                          style: const TextStyle(
+                            color: Color(0xFFB1E63D),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
                           children: [
-                            SizedBox(height: 40), // Adds spacing from top
-                            Image.asset(
-                              'assets/images/karnataka_logo.png',
-                              height: 96,
-                            ),
-                            SizedBox(height: 20),
-                            Text(
-                              'Welcome to Genie Health',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            TextSpan(
+                              text: 'Digital Health',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 24,
                               ),
                             ),
-                            SizedBox(height: 30),
-                            TextField(
-                              decoration: InputDecoration(
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+                      CircleAvatar(
+                        radius: 80,
+                        backgroundImage: AssetImage(
+                          'assets/images/doctors_team.jpg',
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: const Text(
+                                'Welcome Back !',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: const Text(
+                                'Sign in to continue',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black45,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'UserName',
                                 border: OutlineInputBorder(),
-                                labelText: 'Username',
                               ),
                               controller: emailController,
                             ),
-                            SizedBox(height: 10),
-                            TextField(
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Password',
-                              ),
+                            const SizedBox(height: 16),
+                            TextFormField(
                               controller: passwordController,
-                            ),
-                            SizedBox(height: 20),
-                            state is LoginLoading
-                                ? CircularProgressIndicator()
-                                : AppGenieButton(
+                              obscureText: _obscurePassword,
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                border: const OutlineInputBorder(),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                  ),
                                   onPressed:
                                       () => {
-                                        context.read<LoginCubit>().login(
-                                          emailController.text,
-                                          passwordController.text,
-                                        ),
+                                        context
+                                            .read<LoginCubit>()
+                                            .togglePasswordVisibility(
+                                              _obscurePassword,
+                                            ),
                                       },
-                                  buttonText: 'Login',
-                                  backgroundColor: Colors.blue,
                                 ),
-                            SizedBox(height: 60), // Extra spacing before footer
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Checkbox(value: false, onChanged: (_) {}),
+                                    const Text('Remember me'),
+                                  ],
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: const Text('Forgot Password?'),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            SizedBox(
+                              width: double.infinity,
+                              child: AppGenieButton(
+                                onPressed:
+                                    () => {
+                                      context.read<LoginCubit>().login(
+                                        emailController.text,
+                                        passwordController.text,
+                                      ),
+                                    },
+                                buttonText: 'Login',
+                                backgroundColor: const Color(0xFF0C7B79),
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  // Footer Section (Stays at Bottom)
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Powered by'),
-                        Image.asset(
-                          'assets/images/buildgenie_logo.png',
-                          height: 30,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               );
             },
           ),

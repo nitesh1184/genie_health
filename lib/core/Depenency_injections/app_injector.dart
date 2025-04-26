@@ -1,11 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:heath_genie/feature/Home/data/datasource/scanned_patient_list_data_source.dart';
+import 'package:heath_genie/feature/Home/data/datasource/scanned_patient_list_data_source_impl.dart';
+import 'package:heath_genie/feature/Home/domain/repository/scanned_patient_repository.dart';
+import 'package:heath_genie/feature/Home/domain/usecase/scanned_patient_list_usecase.dart';
+import 'package:heath_genie/feature/Home/presentation/cubit/scanned_patient_list_cubit.dart';
 import 'package:heath_genie/feature/detail/data/datasource/patient_detail_data_source.dart';
 import 'package:heath_genie/feature/detail/domain/repository/patient_repository.dart';
 import 'package:heath_genie/feature/detail/domain/usecase/patient_detail_usecase.dart';
 import 'package:heath_genie/feature/detail/presentation/cubit/patient_detail_cubit.dart';
 import 'package:heath_genie/feature/detail/presentation/cubit/spyro_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../feature/Home/data/repository/scanned_patient_list_repository_impl.dart';
 import '../../feature/auth/data/datasource/login_data_source.dart';
 import '../../feature/auth/data/datasource/login_data_source_impl.dart';
 import '../../feature/auth/data/repositories/login_repository_impl.dart';
@@ -34,6 +40,10 @@ Future<void> setupLocator() async {
     () => PatientRepositoryImpl(patientDetailDataSource: sl()),
   );
 
+  sl.registerLazySingleton<ScannedPatientListRepository>(
+        () => ScannedPatientListRepositoryImpl(scannedPatientListDataSource: sl()),
+  );
+
   // Register Use Case
   sl.registerLazySingleton<LoginUseCase>(
     () => LoginUseCase(loginRepository: sl()),
@@ -42,10 +52,15 @@ Future<void> setupLocator() async {
     () => PatientDetailUseCase(patientRepository: sl()),
   );
 
+  sl.registerLazySingleton<ScannedPatientListUseCase>(
+        () => ScannedPatientListUseCase(scannedPatientListRepository: sl()),
+  );
+
   //Register cubit
   sl.registerLazySingleton<UserCubit>(() => UserCubit());
   sl.registerFactory(() => LoginCubit(sl(), sl(), sl()));
   sl.registerFactory(() => PatientDetailCubit(sl(), sl()));
+  sl.registerFactory(() => ScannedPatientListCubit(sl(), sl()));
   sl.registerFactory(() => SpyroCubit());
 
   //Register DataSource
@@ -54,5 +69,9 @@ Future<void> setupLocator() async {
   );
   sl.registerLazySingleton<PatientDetailDataSource>(
     () => PatientDetailDataSourceImpl(),
+  );
+
+  sl.registerLazySingleton<ScannedPatientListDataSource>(
+        () => ScannedPatientListDataSourceImpl(),
   );
 }

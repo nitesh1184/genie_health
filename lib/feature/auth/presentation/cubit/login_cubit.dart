@@ -44,4 +44,7 @@ class LoginCubit extends Cubit<LoginState> {
       );
     }
   }
+  Future<void> togglePasswordVisibility(bool visibility) async{
+    emit(PasswordVisibility(!visibility));
+  }
 }

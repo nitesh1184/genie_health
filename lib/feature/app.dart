@@ -8,7 +8,7 @@ import '../core/localization/generated/strings.dart';
 import '../core/localization/l10n.dart';
 import '../core/router/app_route.dart';
 import '../core/utils/theme_data.dart';
-import 'common/bar_code_cubit.dart';
+import 'common/bar_code/bar_code_cubit.dart';
 import 'common/user/cubit/user_cubit.dart';
 
 class MyApp extends StatelessWidget {
