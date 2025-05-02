@@ -5,14 +5,14 @@ import 'package:heath_genie/feature/Home/domain/repository/scanned_patient_repos
 import '../../../../core/error/failure.dart';
 import '../../../../core/usecases/common_use_case.dart';
 
-class ScannedPatientListUseCase extends BaseUseCase<List<ScannedPatientList>, NoParams> {
+class ScannedPatientListUseCase extends BaseUseCase<ScannedPatientEntity, NoParams> {
 
   final ScannedPatientListRepository scannedPatientListRepository;
 
   ScannedPatientListUseCase({required this.scannedPatientListRepository});
 
   @override
-  Future<Either<Failure, List<ScannedPatientList>>> call(NoParams params) async {
+  Future<Either<Failure, ScannedPatientEntity>> call(NoParams params) async {
     return await scannedPatientListRepository.getScannedPatientList();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ScreeningGrid extends StatelessWidget {
   const ScreeningGrid({super.key});
@@ -39,21 +40,24 @@ class ScreeningGrid extends StatelessWidget {
             ),
             itemBuilder: (_, index) {
               final item = screenings[index];
-              return Container(
-                decoration: BoxDecoration(
-                  color: item.$3,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(item.$2, color: Colors.black54),
-                    const SizedBox(height: 8),
-                    Text(item.$1,
-                        style: const TextStyle(fontSize: 12),
-                        textAlign: TextAlign.center),
-                  ],
-                ),
+              return InkWell(
+                onTap: () => _navigateToNextScreen(context, item.$1),
+              child: Container(
+              decoration: BoxDecoration(
+              color: item.$3,
+              borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Icon(item.$2, color: Colors.black54),
+              const SizedBox(height: 8),
+              Text(item.$1,
+              style: const TextStyle(fontSize: 12),
+              textAlign: TextAlign.center),
+              ],
+              ),
+              ),
               );
             },
           ),
@@ -61,4 +65,16 @@ class ScreeningGrid extends StatelessWidget {
       ),
     );
   }
+  void _navigateToNextScreen(BuildContext context, String title){
+     switch(title){
+       case "BMI Screening":{
+         context.push("/bmi");
+         break;
+       }
+       default:{
+
+       }
+     }
+  }
+
 }

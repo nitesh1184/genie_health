@@ -4,5 +4,5 @@ import 'package:heath_genie/feature/Home/domain/entity/previously_scanned_patien
 import '../../../../core/error/failure.dart';
 
 abstract class ScannedPatientListRepository {
-  Future<Either<Failure,List<ScannedPatientList>>> getScannedPatientList();
+  Future<Either<Failure,ScannedPatientEntity>> getScannedPatientList();
 }

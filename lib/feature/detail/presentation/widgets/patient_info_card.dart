@@ -27,64 +27,35 @@ class PatientInfoCard extends StatelessWidget {
           return Center(child: Text(state.message));
         } else if (state is PatientDataSuccess) {
           final patient = state.data;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Text(
-                          'Patient Information',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Spacer(),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            // Handle barcode view
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF245D51),
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          icon: const Icon(Icons.qr_code, size: 18),
-                          label: const Text('View Barcode'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    if (isExpanded) ...[
-                      PatientInfoItem(title:'Name', value:patient.name),
-                      PatientInfoItem(title:'UHID', value:patient.uhid),
-                      PatientInfoItem(title:'Labour ID', value:patient.labourId),
-                      PatientInfoItem(title:'Age',value: '${patient.age} years'),
-                      PatientInfoItem(title:'Gender',value: patient.gender== 'M'? 'Male':'Female'),
-                      PatientInfoItem(title: 'Last Visit', value: '$randomNum Weeks ago'),
-                    ],
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                        icon: Icon(
-                          isExpanded ? Icons.expand_less : Icons.expand_more,
-                        ),
-                        onPressed: onToggleExpand,
-                      ),
-                    ),
+          return Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16),
+                  if (isExpanded) ...[
+                    PatientInfoItem(title:'Name', value:patient.name),
+                    PatientInfoItem(title:'UHID', value:patient.uhid),
+                    PatientInfoItem(title:'Labour ID', value:patient.labourId),
+                    PatientInfoItem(title:'Age',value: '${patient.age} years'),
+                    PatientInfoItem(title:'Gender',value: patient.gender== 'M'? 'Male':'Female'),
+                    PatientInfoItem(title: 'Last Visit', value: '$randomNum Weeks ago'),
                   ],
-                ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: Icon(
+                        isExpanded ? Icons.expand_less : Icons.expand_more,
+                      ),
+                      onPressed: onToggleExpand,
+                    ),
+                  ),
+                ],
               ),
             ),
           );

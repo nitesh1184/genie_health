@@ -25,6 +25,10 @@ final GoRouter router = GoRouter(
       path: '/patientDetail',
       builder: (context, state) => const PatientDetailScreen(),
     ),
+    GoRoute(
+      path: '/bmi',
+      builder: (context, state) => const PatientDetailScreen(),
+    ),
 
 
   ],

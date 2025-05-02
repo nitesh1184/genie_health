@@ -21,6 +21,17 @@ import '../../feature/auth/presentation/cubit/login_cubit.dart';
 import '../../feature/common/user/cubit/user_cubit.dart';
 import '../../feature/detail/data/datasource/patient_detail_data_source_impl.dart';
 import '../../feature/detail/data/repository/patient_detail_repository_impl.dart';
+import '../../feature/lab_report/bmi/data/datasource/bmi_data_source.dart';
+import '../../feature/lab_report/bmi/data/datasource/bmi_data_source_impl.dart';
+import '../../feature/lab_report/bmi/data/repository/bmi_repository_impl.dart';
+import '../../feature/lab_report/bmi/domain/repository/bmi_repository.dart';
+import '../../feature/lab_report/bmi/domain/usecase/post_emi_usecase.dart';
+import '../../feature/lab_report/bmi/presentaion/cubit/bmi_cubit.dart';
+import '../../feature/lab_report/common/data/datasource/lab_report_data_source.dart';
+import '../../feature/lab_report/common/data/datasource/lab_report_data_source_impl.dart';
+import '../../feature/lab_report/common/data/repository/lab_repository_impl.dart';
+import '../../feature/lab_report/common/domain/repository/lab_report_repository.dart';
+import '../../feature/lab_report/common/domain/usecase/bmi_get_usecase.dart';
 
 final sl = GetIt.instance;
 
@@ -44,6 +55,18 @@ Future<void> setupLocator() async {
         () => ScannedPatientListRepositoryImpl(scannedPatientListDataSource: sl()),
   );
 
+  sl.registerLazySingleton<BmiRepository>(
+        () => BmiRepositoryImpl(bmiDataSource: sl()),
+  );
+
+  sl.registerLazySingleton<LabReportRepository>(
+        () => LabRepositoryImpl(labReportDataSource: sl()),
+  );
+
+
+
+
+
   // Register Use Case
   sl.registerLazySingleton<LoginUseCase>(
     () => LoginUseCase(loginRepository: sl()),
@@ -56,12 +79,22 @@ Future<void> setupLocator() async {
         () => ScannedPatientListUseCase(scannedPatientListRepository: sl()),
   );
 
+  sl.registerLazySingleton<PostBmiUseCase>(
+        () => PostBmiUseCase(repository: sl()),
+  );
+
+  sl.registerLazySingleton<LabReportUseCase>(
+        () => LabReportUseCase(repository: sl()),
+  );
+
+
+
   //Register cubit
   sl.registerLazySingleton<UserCubit>(() => UserCubit());
   sl.registerFactory(() => LoginCubit(sl(), sl(), sl()));
   sl.registerFactory(() => PatientDetailCubit(sl(), sl()));
   sl.registerFactory(() => ScannedPatientListCubit(sl(), sl()));
-  sl.registerFactory(() => SpyroCubit());
+  sl.registerFactory(() => BmiCubit(saveBmiUseCase: sl(), getBmiUseCase: sl(), storage: sl()));
 
   //Register DataSource
   sl.registerLazySingleton<LoginDataSource>(
@@ -73,5 +106,13 @@ Future<void> setupLocator() async {
 
   sl.registerLazySingleton<ScannedPatientListDataSource>(
         () => ScannedPatientListDataSourceImpl(),
+  );
+
+  sl.registerLazySingleton<BmiRemoteDataSource>(
+        () => BmiRemoteDataSourceImpl(),
+  );
+
+  sl.registerLazySingleton<LabReportDataSource>(
+        () => LabReportDataSourceImpl(),
   );
 }

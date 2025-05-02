@@ -11,7 +11,7 @@ import '../model/scanned_patient_list_model.dart';
 
 class ScannedPatientListDataSourceImpl extends ScannedPatientListDataSource {
   @override
-  Future<List<ScannedPatientList>> getScannedPatientList() async {
+  Future<ScannedPatientEntity> getScannedPatientList() async {
     try {
       final storage = await SharedPreferences.getInstance();
       final token = storage.getString('token');
@@ -19,10 +19,7 @@ class ScannedPatientListDataSourceImpl extends ScannedPatientListDataSource {
         url: Constants.Scanned_Patient_API,
         token: token,
       );
-      final data = response.data as List;
-      return data
-          .map((json) => ScannedPatientListModel.fromJson(json))
-          .toList();
+      return ScannedPatientsModel.fromJson(response.data);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout ||

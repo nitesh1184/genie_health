@@ -19,9 +19,9 @@ class ScannedPatientListWidget extends StatelessWidget {
         } else if (state is ScannedPatientListDataSuccess) {
           final patients = state.data;
           return ListView.builder(
-            itemCount: patients.length,
+            itemCount: patients.totalCount,
             itemBuilder: (_, index) {
-              final patient = patients[index];
+              final patient = patients.data[index];
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ListTile(
@@ -29,7 +29,7 @@ class ScannedPatientListWidget extends StatelessWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${patient.age} Y /${patient.gender}'== 'M'? 'Male':'Female' ),
+                      Text('${patient.age} Y /${patient.gender}'== "M"? 'Male':'Female' ),
                       Text('location - ${DateFormat.yMd('es').format(patient.registrationDate)}'),
                     ],
                   ),

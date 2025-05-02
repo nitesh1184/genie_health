@@ -39,8 +39,23 @@ class DioHelper {
     required String path,
     Map<String, dynamic>? data,
     Map<String, dynamic>? query,
+    String ? token
   }) async {
+    dio.options.headers["Authorization"] = token;
     return await dio.post(
+        path,
+        data: data,
+        queryParameters: query);
+  }
+
+  static Future<Response> putData({
+    required String path,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? query,
+    String ? token
+  }) async {
+    dio.options.headers["Authorization"] = token;
+    return await dio.put(
         path,
         data: data,
         queryParameters: query);

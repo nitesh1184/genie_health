@@ -1,7 +1,22 @@
 import '../../domain/entity/previously_scanned_patient.dart';
 
-class ScannedPatientListModel extends ScannedPatientList{
-  const ScannedPatientListModel({
+class ScannedPatientsModel extends ScannedPatientEntity {
+  const ScannedPatientsModel({
+    required super.totalCount,
+    required super.data,
+  });
+
+  factory ScannedPatientsModel.fromJson(Map<String, dynamic> json) =>
+      ScannedPatientsModel(
+        data: List<ScannedPatientModel>.from(
+          json["data"].map((x) => ScannedPatientModel.fromJson(x)),
+        ),
+        totalCount: json["totalCount"],
+      );
+}
+
+class ScannedPatientModel extends ScannedPatient {
+  const ScannedPatientModel({
     required super.uuid,
     required super.registrationDate,
     required super.name,
@@ -26,10 +41,10 @@ class ScannedPatientListModel extends ScannedPatientList{
     required super.updatedAt,
     required super.campaignId,
     required super.districtId,
-});
+  });
 
-  factory ScannedPatientListModel.fromJson(Map<String, dynamic> json) {
-    return ScannedPatientListModel(
+  factory ScannedPatientModel.fromJson(Map<String, dynamic> json) {
+    return ScannedPatientModel(
       uuid: json["uuid"],
       registrationDate: DateTime.parse(json["registration_date"]),
       name: json["name"],

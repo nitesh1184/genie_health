@@ -1,24 +1,26 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:heath_genie/feature/detail/data/datasource/patient_detail_data_source.dart';
-import 'package:heath_genie/feature/detail/domain/entity/patient_model.dart';
+import 'package:heath_genie/feature/lab_report/common/domain/entities/lab_report_parameter_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../core/error/exceptions.dart';
-import '../../../../core/network/dio_helper.dart';
-import '../../../../core/utils/constants.dart';
-import '../model/patient_response_model.dart';
 
-class PatientDetailDataSourceImpl extends PatientDetailDataSource {
+import '../../../../../core/error/exceptions.dart';
+import '../../../../../core/network/dio_helper.dart';
+import '../../../../../core/utils/constants.dart';
+import '../model/lab_report_model.dart';
+import 'lab_report_data_source.dart';
+
+class LabReportDataSourceImpl extends LabReportDataSource {
+
   @override
-  Future<Patient> getPatientDetails(String patientId) async {
+  Future<LabReportEntity> getLabReport(String uhid, String group) async {
     try {
       final storage = await SharedPreferences.getInstance();
       final token = storage.getString('token');
       final response = await DioHelper.getData(
-        url: '${Constants.Patient_API}$patientId',
+        url: '${Constants.Report_API}$uhid/$group',
         token: token,
       );
-      return PatientModel.fromJson(response.data);
+      return LabReportModel.fromJson(response.data);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout ||

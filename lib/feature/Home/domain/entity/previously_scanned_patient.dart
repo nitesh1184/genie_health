@@ -1,6 +1,21 @@
 import 'package:equatable/equatable.dart';
 
-class ScannedPatientList extends Equatable {
+
+class ScannedPatientEntity extends Equatable {
+  final int totalCount;
+  final List<ScannedPatient> data;
+
+
+  const ScannedPatientEntity({
+    required this.totalCount,
+    required this.data,
+
+  });
+
+  @override
+  List<Object?> get props => [data, totalCount];
+}
+class ScannedPatient extends Equatable {
   final String uuid;
   final DateTime registrationDate;
   final String name;
@@ -26,7 +41,7 @@ class ScannedPatientList extends Equatable {
   final String campaignId;
   final String districtId;
 
-  const ScannedPatientList({
+  const ScannedPatient({
     required this.uuid,
     required this.registrationDate,
     required this.name,
@@ -54,26 +69,30 @@ class ScannedPatientList extends Equatable {
   });
 
   @override
-  List<Object> get props =>
-      [
-        uuid,
-        registrationDate,
-        name,
-        billNo,
-        tokenNo,
-        uhid,
-        paymentStatus,
-        reportStatus,
-        barcode,
-        labourId,
-        age,
-        gender,
-        mobile,
-        reportUrl,
-        createdBy,
-        updatedBy,
-        createdAt,
-        updatedAt,
-        campaignId,
-      ];
+  List<Object?> get props => [
+    uuid,
+    registrationDate,
+    name,
+    billNo,
+    tokenNo,
+    uhid,
+    paymentStatus,
+    reportStatus,
+    barcode,
+    labourId,
+    age,
+    gender,
+    mobile,
+    reportUrl,
+    taluk,
+    firstName,
+    lastName,
+    dateOfBirth,
+    createdBy,
+    updatedBy,
+    createdAt,
+    updatedAt,
+    campaignId,
+    districtId,
+  ];
 }

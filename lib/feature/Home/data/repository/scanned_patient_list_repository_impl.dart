@@ -12,7 +12,7 @@ class ScannedPatientListRepositoryImpl extends ScannedPatientListRepository {
   ScannedPatientListRepositoryImpl({required this.scannedPatientListDataSource});
 
   @override
-  Future<Either<Failure, List<ScannedPatientList>>> getScannedPatientList() async {
+  Future<Either<Failure, ScannedPatientEntity>> getScannedPatientList() async {
     try {
       final result = await scannedPatientListDataSource.getScannedPatientList();
       return Right(result);

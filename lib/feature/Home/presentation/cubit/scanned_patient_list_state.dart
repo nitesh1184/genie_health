@@ -12,7 +12,7 @@ class ScannedPatientListInitial extends ScannedPatientListState {}
 class ScannedPatientListLoading extends ScannedPatientListState {}
 
 class ScannedPatientListDataSuccess extends ScannedPatientListState {
-  final List<ScannedPatientList> data;
+  final ScannedPatientEntity data;
 
   ScannedPatientListDataSuccess(this.data);
 
