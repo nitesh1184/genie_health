@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heath_genie/feature/lab_report/common/domain/entities/lab_report_parameter_entity.dart';
 import '../../../../../core/Depenency_injections/app_injector.dart';
+import '../../../../common/user/cubit/user_cubit.dart';
 import '../../../../detail/presentation/cubit/patient_detail_cubit.dart';
 import '../../../../detail/presentation/cubit/patient_detail_state.dart';
 import '../../../../detail/presentation/widgets/patient_info_card.dart';
@@ -59,6 +60,8 @@ class _OximeterScreenState extends State<OximeterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<UserCubit>().state;
+    final userName = user!.name;
     return MultiBlocProvider(
       providers: [
         BlocProvider<OximeterCubit>(create: (_) => sl<OximeterCubit>()..getOximeterData()),
@@ -71,11 +74,11 @@ class _OximeterScreenState extends State<OximeterScreen> {
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight),
             child: TopBar(
-              title: 'BMI Screening',
+              title: userName,
               onBack: () {
                 context.pop();
               },
-              isPrefixAdded: false,
+
             ),
           ),
           body: BlocConsumer<OximeterCubit , OximeterState>(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heath_genie/feature/lab_report/common/domain/entities/lab_report_parameter_entity.dart';
 import '../../../../../core/Depenency_injections/app_injector.dart';
+import '../../../../common/user/cubit/user_cubit.dart';
 import '../../../../detail/presentation/cubit/patient_detail_cubit.dart';
 import '../../../../detail/presentation/cubit/patient_detail_state.dart';
 import '../../../../detail/presentation/widgets/patient_info_card.dart';
@@ -88,6 +89,8 @@ class _BmiScreenState extends State<BmiScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<UserCubit>().state;
+    final userName = user!.name;
     return MultiBlocProvider(
       providers: [
         BlocProvider<BmiCubit>(create: (_) => sl<BmiCubit>()..getBmi()),
@@ -104,7 +107,6 @@ class _BmiScreenState extends State<BmiScreen> {
               onBack: () {
                 context.pop();
               },
-              isPrefixAdded: false,
             ),
           ),
           body: BlocConsumer<BmiCubit, BmiState>(

@@ -6,7 +6,9 @@ import '../../feature/Home/presentation/homepage.dart';
 import '../../feature/auth/presentation/UI/login.dart';
 import '../../feature/common/bar_code/bar_code_scanner.dart';
 import '../../feature/detail/presentation/patient_detail_screen.dart';
+import '../../feature/lab_report/blood_pressure/presentation/screen/blood_pressure_screen.dart';
 import '../../feature/lab_report/bmi/presentaion/screens/bmi_screen.dart';
+import '../../feature/lab_report/oximeter/presentation/screen/oximeter_screen.dart';
 import '../../feature/lab_report/spirometer/presentation/screens/spirometer_screen.dart';
 
 final GoRouter router = GoRouter(
@@ -34,6 +36,16 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/spirometer',
       builder: (context, state) => const SpirometerScreen(),
+    ),
+
+    GoRoute(
+      path: '/Oximeter',
+      builder: (context, state) => const OximeterScreen(),
+    ),
+
+    GoRoute(
+      path: '/bp',
+      builder: (context, state) => const BloodPressureScreen(),
     ),
 
   ],

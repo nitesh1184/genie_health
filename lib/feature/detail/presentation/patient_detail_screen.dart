@@ -28,7 +28,6 @@ class PatientDetailScreen extends StatelessWidget {
               onBack: () {
                 context.go("/home");
               },
-              isPrefixAdded: true,
             ),
             BlocProvider(
               create: (_) => patientCubit..getDetails(),
