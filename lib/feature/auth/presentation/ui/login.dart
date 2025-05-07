@@ -12,6 +12,7 @@ import '../cubit/login_state.dart';
 
 class LoginScreen extends StatelessWidget {
   bool _obscurePassword = true;
+  bool activateLogin=true;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -30,8 +31,10 @@ class LoginScreen extends StatelessWidget {
               if (state is LoginFailure) {
                 showDialogBox(context, state.message);
               } else if (state is LoginLoading) {
-                GenieAppProgressDialog(
-                  text: 'Please wait, we are trying to sign you in...',
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) => const GenieAppProgressDialog(text: 'Please wait, we are trying to sign you in...'),
                 );
               }
               else if(state is PasswordVisibility){

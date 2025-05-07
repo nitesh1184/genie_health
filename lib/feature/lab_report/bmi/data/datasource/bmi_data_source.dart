@@ -1,9 +1,8 @@
-import 'package:heath_genie/feature/lab_report/bmi/domain/entities/bmi_response_entity.dart';
-import '../../../common/data/model/lab_report_model.dart';
+import '../../../common/domain/entities/screening_success_response_entity.dart';
 
 
 abstract class BmiRemoteDataSource {
-  Future<BMIResponse> saveBmiParameters({
+  Future<ScreeningSuccessResponse> saveBmiParameters({
     required String uhid,
     required Map<String, dynamic> bmiRequestBody,
   });

@@ -1,12 +1,14 @@
-import '../../domain/entities/bmi_response_entity.dart';
 
-class BMIResponseModel extends BMIResponse {
-  BMIResponseModel({required super.message, required super.parameterGroup});
 
-  factory BMIResponseModel.fromJson(Map<String, dynamic> json) {
-    return BMIResponseModel(
+import '../../domain/entities/screening_success_response_entity.dart';
+
+class ScreeningSuccessResponseModel extends ScreeningSuccessResponse {
+  ScreeningSuccessResponseModel({required super.message, required super.parameterGroup});
+
+  factory ScreeningSuccessResponseModel.fromJson(Map<String, dynamic> json) {
+    return ScreeningSuccessResponseModel(
       message: json['message'] ?? '',
-      parameterGroup: json['paramterGroup'] ?? '',
+      parameterGroup: ParameterGroupModel.fromJson(json["paramter_group"]),
     );
   }
 }

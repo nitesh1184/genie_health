@@ -71,6 +71,10 @@ class ScreeningGrid extends StatelessWidget {
          context.push("/bmi");
          break;
        }
+       case "Spirometer": {
+         context.push("/spirometer");
+         break;
+       }
        default:{
 
        }

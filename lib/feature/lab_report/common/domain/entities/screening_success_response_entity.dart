@@ -1,8 +1,8 @@
-class BMIResponse {
+class ScreeningSuccessResponse {
   String message;
   ParameterGroup parameterGroup;
 
-  BMIResponse({
+  ScreeningSuccessResponse({
     required this.message,
     required this.parameterGroup,
   });
@@ -14,7 +14,6 @@ class ParameterGroup {
   String department;
   String barCode;
   List<Parameter> parameters;
-
   ParameterGroup({
     required this.name,
     required this.department,

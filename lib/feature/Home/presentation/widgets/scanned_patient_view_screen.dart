@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../common/user/cubit/user_cubit.dart';
 import '../cubit/patient_tab_cubit.dart';
@@ -18,7 +20,7 @@ class PatientView extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF00695C),
-        title:Text("Welcome $userName"),
+        title:Text("Welcome $userName",style: TextStyle(color: Colors.white),),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
@@ -27,8 +29,10 @@ class PatientView extends StatelessWidget {
                 foregroundColor: Colors.teal,
                 backgroundColor: Colors.white,
               ),
-              onPressed: () {},
-              child: const Text("Login"),
+              onPressed: () {
+                _logout(context);
+              },
+              child: const Text("Logout"),
             ),
           )
         ],
@@ -106,5 +110,11 @@ class PatientView extends StatelessWidget {
         ),
       ),
     );
+  }
+  void _logout(BuildContext context) async {
+    final go = context.go; // Capture before await
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    go('/login'); // Use safely after async
   }
 }

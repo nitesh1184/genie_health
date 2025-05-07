@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class TopBar extends StatelessWidget {
-  final String username;
+  final String title;
   final VoidCallback onBack;
+  final bool isPrefixAdded;
 
-  const TopBar({required this.username, required this.onBack, super.key});
+  const TopBar({required this.title, required this.onBack,required this.isPrefixAdded, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class TopBar extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Welcome $username',
+              isPrefixAdded?'Welcome $title':title,
               style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
           ),

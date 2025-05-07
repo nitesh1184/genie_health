@@ -1,26 +1,26 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:heath_genie/feature/lab_report/common/data/model/screening_success_response_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../core/error/exceptions.dart';
 import '../../../../../core/network/dio_helper.dart';
 import '../../../../../core/utils/constants.dart';
+import '../../../common/data/model/screening_success_response_model.dart';
 import '../../../common/domain/entities/screening_success_response_entity.dart';
-import 'bmi_data_source.dart';
+import 'blood_pressure_data_source.dart';
 
-class BmiRemoteDataSourceImpl extends BmiRemoteDataSource{
+class BloodPressureDataSourceImpl extends BloodPressureDataSource{
 
   @override
-  Future<ScreeningSuccessResponse> saveBmiParameters({required String uhid, required Map<String, dynamic> bmiRequestBody}) async {
+  Future<ScreeningSuccessResponse> saveParameters({required String uhid, required Map<String, dynamic> requestBody}) async {
     try {
       final storage = await SharedPreferences.getInstance();
       final token = storage.getString('token');
 
       final response = await DioHelper.putData(
-        path: '${Constants.Post_Report_API}$uhid',
-        token: token,
-        data: bmiRequestBody
+          path: '${Constants.Post_Report_API}$uhid',
+          token: token,
+          data: requestBody
       );
       if (response.statusCode == 200) {
         return ScreeningSuccessResponseModel.fromJson(response.data);
@@ -40,5 +40,5 @@ class BmiRemoteDataSourceImpl extends BmiRemoteDataSource{
       throw const ServerException();
     }
   }
-  
+
 }

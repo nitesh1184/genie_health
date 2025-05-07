@@ -2,6 +2,6 @@ import 'package:dartz/dartz.dart';
 import '../../../../../core/error/failure.dart';
 import '../../../common/domain/entities/screening_success_response_entity.dart';
 
-abstract class BmiRepository {
-  Future<Either<Failure,ScreeningSuccessResponse>>  saveBmiData(String uhid, Map<String, dynamic> bmiRequestBody);
+abstract class SpirometerRepository {
+  Future<Either<Failure,ScreeningSuccessResponse>>  saveParameters(String uhid, Map<String, dynamic> requestBody);
 }

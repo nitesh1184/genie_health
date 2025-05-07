@@ -24,10 +24,11 @@ class PatientDetailScreen extends StatelessWidget {
         child: Column(
           children: [
             TopBar(
-              username: userName, // Ideally from user data
+              title: userName, // Ideally from user data
               onBack: () {
-                context.pop();
+                context.go("/home");
               },
+              isPrefixAdded: true,
             ),
             BlocProvider(
               create: (_) => patientCubit..getDetails(),

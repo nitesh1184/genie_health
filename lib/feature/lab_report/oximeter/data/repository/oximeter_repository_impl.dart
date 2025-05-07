@@ -1,20 +1,21 @@
 import 'package:dartz/dartz.dart';
-import 'package:heath_genie/core/error/failure.dart';
+
 import '../../../../../core/error/exceptions.dart';
+import '../../../../../core/error/failure.dart';
 import '../../../common/domain/entities/screening_success_response_entity.dart';
-import '../../domain/repository/bmi_repository.dart';
-import '../datasource/bmi_data_source.dart';
+import '../../domain/repository/oximeter_repository.dart';
+import '../datasource/oximeter_data_source.dart';
 
-class BmiRepositoryImpl implements BmiRepository {
-  final BmiRemoteDataSource bmiDataSource;
 
-  BmiRepositoryImpl({required this.bmiDataSource});
+class OximeterRepositoryImpl implements OximeterRepository {
+  final OximeterDataSource oximeterDataSource;
 
+  OximeterRepositoryImpl({required this.oximeterDataSource});
 
   @override
-  Future<Either<Failure, ScreeningSuccessResponse>> saveBmiData(String uhid,Map<String, dynamic> bmiRequestBody) async{
-     try{
-      final result = await bmiDataSource.saveBmiParameters(uhid: uhid, bmiRequestBody: bmiRequestBody);
+  Future<Either<Failure, ScreeningSuccessResponse>> saveParameters(String uhid,Map<String, dynamic> requestBody) async{
+    try{
+      final result = await oximeterDataSource.saveParameters(uhid: uhid, requestBody: requestBody);
       return Right(result);
     } on NoInternetException {
       return Left(
@@ -32,5 +33,5 @@ class BmiRepositoryImpl implements BmiRepository {
       ); // Generic server failure
     }
   }
-  
+
 }

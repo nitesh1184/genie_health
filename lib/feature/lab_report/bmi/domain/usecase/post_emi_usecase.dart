@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:heath_genie/feature/lab_report/bmi/domain/entities/bmi_response_entity.dart';
 import '../../../../../core/error/failure.dart';
 import '../../../../../core/usecases/common_use_case.dart';
+import '../../../common/domain/entities/screening_success_response_entity.dart';
 import '../repository/bmi_repository.dart';
 
-class PostBmiUseCase extends BaseUseCase<BMIResponse, SaveBmiParams> {
+class PostBmiUseCase extends BaseUseCase<ScreeningSuccessResponse, SaveBmiParams> {
 
   final BmiRepository repository;
 
@@ -12,8 +12,8 @@ class PostBmiUseCase extends BaseUseCase<BMIResponse, SaveBmiParams> {
 
 
   @override
-  Future<Either<Failure, BMIResponse>> call(SaveBmiParams params) async {
-    return repository.saveBmiData(params.bmiRequestBody);
+  Future<Either<Failure, ScreeningSuccessResponse>> call(SaveBmiParams params) async {
+    return repository.saveBmiData(params.uhid,params.bmiRequestBody);
   }
 }
 
@@ -23,6 +23,7 @@ class PostBmiUseCase extends BaseUseCase<BMIResponse, SaveBmiParams> {
 
 class SaveBmiParams {
   final Map<String, dynamic> bmiRequestBody;
+  final String uhid;
 
-  SaveBmiParams({required this.bmiRequestBody});
+  SaveBmiParams({required this.bmiRequestBody, required this.uhid});
 }

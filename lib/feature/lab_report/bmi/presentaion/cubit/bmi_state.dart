@@ -12,7 +12,7 @@ class BmiInitial extends BmiState {}
 class BmiSaving extends BmiState {}
 
 class BmiSaveSuccess extends BmiState {
-  final BMIResponse responseData;
+  final ScreeningSuccessResponse responseData;
 
   const BmiSaveSuccess(this.responseData);
 
