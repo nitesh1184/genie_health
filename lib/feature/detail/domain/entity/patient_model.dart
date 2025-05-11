@@ -25,7 +25,6 @@ class Patient extends Equatable {
   final DateTime updatedAt;
   final String campaignId;
   final String districtId;
-
   const Patient({
     required this.uuid,
     required this.registrationDate,

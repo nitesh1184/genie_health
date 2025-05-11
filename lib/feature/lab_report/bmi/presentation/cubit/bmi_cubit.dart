@@ -1,8 +1,9 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heath_genie/feature/lab_report/common/domain/entities/lab_report_parameter_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/error/failure.dart';
+import '../../../common/domain/entities/save_report_params.dart';
 import '../../../common/domain/entities/screening_success_response_entity.dart';
 import '../../../common/domain/usecase/bmi_get_usecase.dart';
 
@@ -25,7 +26,7 @@ class BmiCubit extends Cubit<BmiState> {
   Future<void> saveBmi(Map<String, dynamic> bmiRequestBody) async {
     emit(BmiSaving());
     final patientId = storage.getString("uid");
-    final result = await saveBmiUseCase(SaveBmiParams(bmiRequestBody: bmiRequestBody, uhid: patientId.toString()));
+    final result = await saveBmiUseCase(SaveParams(requestBody: bmiRequestBody, uhid: patientId.toString()));
 
     result.fold((failure) {
       if (failure is NoInternetFailure) {

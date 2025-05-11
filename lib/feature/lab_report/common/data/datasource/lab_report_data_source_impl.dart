@@ -17,7 +17,7 @@ class LabReportDataSourceImpl extends LabReportDataSource {
       final storage = await SharedPreferences.getInstance();
       final token = storage.getString('token');
       final response = await DioHelper.getData(
-        url: '${Constants.Report_API}$uhid/$group',
+        url: '${Constants.Lab_Report_API}$uhid/$group',
         token: token,
       );
       return LabReportModel.fromJson(response.data);

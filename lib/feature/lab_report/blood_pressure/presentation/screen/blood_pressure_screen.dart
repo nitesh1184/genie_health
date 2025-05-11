@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:heath_genie/feature/lab_report/common/domain/entities/lab_report_parameter_entity.dart';
 import '../../../../../core/Depenency_injections/app_injector.dart';
 import '../../../../common/user/cubit/user_cubit.dart';
+import '../../../../detail/domain/entity/patient_model.dart';
 import '../../../../detail/presentation/cubit/patient_detail_cubit.dart';
 import '../../../../detail/presentation/cubit/patient_detail_state.dart';
 import '../../../../detail/presentation/widgets/patient_info_card.dart';
@@ -25,6 +26,7 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
   final TextEditingController notesController = TextEditingController();
   late LabReportEntity bloodPressureEntity;
   late PatientDetailCubit patientCubit;
+  Patient? patient;
 
   @override
   void initState() {
@@ -47,7 +49,7 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
         case 'Systolic':
           systolicController.text = param.value;
           break;
-        case 'diastolic':
+        case 'Diastolic':
           diastolicController.text = param.value;
 
           break;
@@ -86,7 +88,7 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
                 populateFields(bloodPressureEntity);
               } else if (state is BloodPressureSaveSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('BMI Data Saved Successfully')),
+                  const SnackBar(content: Text('Data Saved Successfully')),
                 );
                 context.pop();
 
@@ -110,9 +112,12 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
                         builder: (context, patientState) {
                           final patientCubit =
                           context.read<PatientDetailCubit>();
+                          if(patientState is PatientDataSuccess && patient == null) {
+                            patient = patientState.data;
+                          }
                           return PatientInfoCard(
-                            isExpanded: patientCubit.isExpanded,
-                            onToggleExpand: patientCubit.toggleExpandCollapse,
+                            isExpanded: patientState is PatientDataSuccess ? patientState.isExpanded : false,
+                            onToggleExpand: () => patientCubit.toggleExpandCollapse(),
                           );
                         },
                       ), // 🧩 Reusable card
@@ -127,28 +132,20 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
                       const SizedBox(height: 8),
                       const Text(
                         'Systolic Pressure (mmHg)',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      Expanded(
-                        child: _buildTextField(
-                          '', systolicController,
-                        ),
+                      SizedBox(
+                        height: 50,
+                        child: _buildTextField('', systolicController),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(height: 16),
                       const Text(
                         'diastolic Pressure (mmHg)',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      Expanded(
-                        child: _buildTextField(
-                          '', diastolicController,
-                        ),
+                      SizedBox(
+                        height: 50,
+                        child: _buildTextField('', diastolicController),
                       ),
 
                       const SizedBox(height: 16),
@@ -235,25 +232,24 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
     return {
       "name": "BLOOD PRESSURE",
       "department": "Basic Health Checkup Report",
-      "bar_code": "243671063",
+      "bar_code": patient!.barcode,
       "parameters": [
         _parameter("Diastolic", diastolicController.text, "mmHg"),
         _parameter("Systolic", systolicController.text, "mmHg"),
-        _parameter("Notes", notesController.text, ""),
       ],
     };
   }
 
   Map<String, dynamic> _parameter(String name, String value, String unit) {
     return {
-      "name": name,
-      "uhid": "KA-256496983",
-      "bar_code": "243671063",
-      "parameter_group_name": "BLOOD PRESSURE",
-      "machine_code": "",
-      "value": value,
-      "unit": unit,
-      "comments": "",
+    "name": name,
+    "uhid": patient!.uhid,
+    "bar_code": patient!.barcode,
+    "parameter_group_name": "BLOOD PRESSURE",
+    "machine_code": "",
+    "value": value,
+    "unit": unit,
+    "comments": notesController.text,
     };
   }
 

@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../../core/error/exceptions.dart';
 import '../../../../../core/error/failure.dart';
 import '../../../common/domain/entities/screening_success_response_entity.dart';
-import '../../domain/repository/blood_pressure_repositoy.dart';
+import '../../domain/repository/blood_pressure_repository.dart';
 import '../datasource/blood_pressure_data_source.dart';
 
 class BloodPressureRepositoryImpl implements BloodPressureRepository {

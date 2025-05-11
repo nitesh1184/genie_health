@@ -74,8 +74,8 @@ class PatientDetailScreen extends StatelessWidget {
                                   ],
                                 ),
                                 PatientInfoCard(
-                                  isExpanded: patientCubit.isExpanded,
-                                  onToggleExpand: patientCubit.toggleExpandCollapse,
+                                  isExpanded: state is PatientDataSuccess ? state.isExpanded : false,
+                                  onToggleExpand: () => context.read<PatientDetailCubit>().toggleExpandCollapse(),
                                 ),
                               ],
                             ),

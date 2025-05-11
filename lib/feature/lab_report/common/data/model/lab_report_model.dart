@@ -14,9 +14,10 @@ class LabReportModel extends LabReportEntity {
       name: json['name'] ?? '',
       department: json['department'] ?? '',
       barCode: json['bar_code'] ?? '',
-      parameters: (json['parameters'] as List)
-          .map((e) => LabReportParameterEntityModel .fromJson(e))
-          .toList(),
+      parameters: (json['parameters'] as List?)
+          ?.map((e) => LabReportParameterEntityModel.fromJson(e))
+          .toList() ??
+          [],
     );
   }
 }

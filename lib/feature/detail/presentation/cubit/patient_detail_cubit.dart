@@ -23,12 +23,16 @@ class PatientDetailCubit extends Cubit<PatientDataState> {
       } else {
         emit(PatientDataFailure(failure.message)); // Generic error
       }
-    }, (data) => emit(PatientDataSuccess(data)));
+    }, (data) {
+      emit(PatientDataSuccess(data, isExpanded: true)); // set initial expanded state
+    });
   }
 
   void toggleExpandCollapse() {
-    isExpanded = !isExpanded;
-    emit(PatientExpandCollapseChanged()); // <-- emit separate state
+    final currentState = state;
+    if (currentState is PatientDataSuccess) {
+      emit(currentState.copyWith(isExpanded: !currentState.isExpanded));
+    }// <-- emit separate state
   }
 }
 

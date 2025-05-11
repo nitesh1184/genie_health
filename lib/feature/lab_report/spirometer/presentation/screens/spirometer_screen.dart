@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:heath_genie/feature/lab_report/common/domain/entities/lab_report_parameter_entity.dart';
 import '../../../../../core/Depenency_injections/app_injector.dart';
 import '../../../../common/user/cubit/user_cubit.dart';
+import '../../../../detail/domain/entity/patient_model.dart';
 import '../../../../detail/presentation/cubit/patient_detail_cubit.dart';
 import '../../../../detail/presentation/cubit/patient_detail_state.dart';
 import '../../../../detail/presentation/widgets/patient_info_card.dart';
@@ -26,6 +27,7 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
   final TextEditingController notesController = TextEditingController();
   late LabReportEntity spirometerEntity;
   late PatientDetailCubit patientCubit;
+  Patient? patient;
 
   @override
   void initState() {
@@ -65,12 +67,13 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final user = context.watch<UserCubit>().state;
     final userName = user!.name;
     return MultiBlocProvider(
       providers: [
-        BlocProvider<SpirometerCubit>(create: (_) => sl<SpirometerCubit >()..getSpirometerData()),
+        BlocProvider<SpirometerCubit>(
+          create: (_) => sl<SpirometerCubit>()..getSpirometerData(),
+        ),
         BlocProvider<PatientDetailCubit>(
           create: (_) => patientCubit..getDetails(),
         ),
@@ -86,18 +89,16 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
               },
             ),
           ),
-          body: BlocConsumer<SpirometerCubit , SpirometerState>(
+          body: BlocConsumer<SpirometerCubit, SpirometerState>(
             listener: (context, state) {
               if (state is SpirometerLoadSuccess) {
                 spirometerEntity = state.spirometerData;
                 populateFields(spirometerEntity);
               } else if (state is SpirometerSaveSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('BMI Data Saved Successfully')),
+                  const SnackBar(content: Text('Data Saved Successfully')),
                 );
                 context.pop();
-
-
               } else if (state is SpirometerSaveFailed) {
                 ScaffoldMessenger.of(
                   context,
@@ -107,7 +108,8 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
             builder: (context, state) {
               if (state is SpirometerLoading) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (state is SpirometerLoadSuccess || state is SpirometerSaving) {
+              } else if (state is SpirometerLoadSuccess ||
+                  state is SpirometerSaving) {
                 return SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -116,10 +118,17 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
                       BlocBuilder<PatientDetailCubit, PatientDataState>(
                         builder: (context, patientState) {
                           final patientCubit =
-                          context.read<PatientDetailCubit>();
+                              context.read<PatientDetailCubit>();
+                          if (patientState is PatientDataSuccess && patient==null) {
+                            patient = patientState.data;
+                          }
                           return PatientInfoCard(
-                            isExpanded: patientCubit.isExpanded,
-                            onToggleExpand: patientCubit.toggleExpandCollapse,
+                            isExpanded:
+                                patientState is PatientDataSuccess
+                                    ? patientState.isExpanded
+                                    : false,
+                            onToggleExpand:
+                                () => patientCubit.toggleExpandCollapse(),
                           );
                         },
                       ), // 🧩 Reusable card
@@ -135,16 +144,11 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildTextField(
-                              'FEF', fefController,
-                            ),
+                            child: _buildTextField('FEF', fefController),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: _buildTextField(
-                              'PEF',
-                              pefController,
-                            ),
+                            child: _buildTextField('PEF', pefController),
                           ),
                         ],
                       ),
@@ -152,16 +156,11 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildTextField(
-                              'FEV1', fev1Controller,
-                            ),
+                            child: _buildTextField('FEV1', fev1Controller),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: _buildTextField(
-                              'FEV6',
-                              fev6Controller,
-                            ),
+                            child: _buildTextField('FEV6', fev6Controller),
                           ),
                         ],
                       ),
@@ -170,8 +169,6 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
                         'Notes (Optional)',
                         notesController,
                       ),
-
-
 
                       const SizedBox(height: 32),
                       Row(
@@ -199,7 +196,9 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             final requestBody = _prepareRequest();
-                            context.read<SpirometerCubit>().saveParameter(requestBody);
+                            context.read<SpirometerCubit>().saveParameter(
+                              requestBody,
+                            );
                           },
                           child: const Text('Save Reading'),
                         ),
@@ -232,9 +231,9 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
   }
 
   Widget _buildMultilineTextField(
-      String label,
-      TextEditingController controller,
-      ) {
+    String label,
+    TextEditingController controller,
+  ) {
     return TextField(
       controller: controller,
       maxLines: 3,
@@ -245,13 +244,11 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
     );
   }
 
-
-
   Map<String, dynamic> _prepareRequest() {
     return {
       "name": "SPIROMETER",
       "department": "Basic Health Checkup Report",
-      "bar_code": "243671063",
+      "bar_code": patient!.barcode,
       "parameters": [
         _parameter("FEF", fefController.text, ""),
         _parameter("PEF", pefController.text, ""),
@@ -264,8 +261,8 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
   Map<String, dynamic> _parameter(String name, String value, String unit) {
     return {
       "name": name,
-      "uhid": "KA-256496983",
-      "bar_code": "243671063",
+      "uhid": patient!.uhid,
+      "bar_code": patient!.barcode,
       "parameter_group_name": "SPIROMETER",
       "machine_code": "",
       "value": value,
@@ -273,5 +270,4 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
       "comments": notesController.text,
     };
   }
-
 }

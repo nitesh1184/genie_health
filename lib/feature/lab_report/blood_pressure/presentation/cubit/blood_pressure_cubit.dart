@@ -1,14 +1,11 @@
-import 'package:bloc/bloc.dart';
-import 'package:heath_genie/feature/lab_report/spirometer/presentation/cubit/spirometer_state.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/error/failure.dart';
-import '../../../bmi/domain/usecase/post_emi_usecase.dart';
+import '../../../common/domain/entities/save_report_params.dart';
 import '../../../common/domain/usecase/bmi_get_usecase.dart';
 import '../../domain/usecase/blood_pressure_usecase.dart';
 import 'blood_pressure_state.dart';
-
-
-
 
 class BloodPressureCubit extends Cubit<BloodPressureState> {
   final BloodPressureUseCase saveBloodPressureUseCase;

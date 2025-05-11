@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:heath_genie/feature/lab_report/common/domain/entities/lab_report_parameter_entity.dart';
 import '../../../../../core/Depenency_injections/app_injector.dart';
 import '../../../../common/user/cubit/user_cubit.dart';
+import '../../../../detail/domain/entity/patient_model.dart';
 import '../../../../detail/presentation/cubit/patient_detail_cubit.dart';
 import '../../../../detail/presentation/cubit/patient_detail_state.dart';
 import '../../../../detail/presentation/widgets/patient_info_card.dart';
@@ -30,6 +31,7 @@ class _BmiScreenState extends State<BmiScreen> {
   final TextEditingController notesController = TextEditingController();
   late LabReportEntity bmiEntity;
   late PatientDetailCubit patientCubit;
+  Patient? patient;
 
   @override
   void initState() {
@@ -103,7 +105,7 @@ class _BmiScreenState extends State<BmiScreen> {
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight),
             child: TopBar(
-              title: 'BMI Screening',
+              title: userName,
               onBack: () {
                 context.pop();
               },
@@ -119,11 +121,6 @@ class _BmiScreenState extends State<BmiScreen> {
                   const SnackBar(content: Text('BMI Data Saved Successfully')),
                 );
                 context.pop();
-
-
-
-
-
 
               } else if (state is BmiSaveFailed) {
                 ScaffoldMessenger.of(
@@ -144,9 +141,12 @@ class _BmiScreenState extends State<BmiScreen> {
                         builder: (context, patientState) {
                           final patientCubit =
                               context.read<PatientDetailCubit>();
+                          if(patientState is PatientDataSuccess && patient==null) {
+                            patient = patientState.data;
+                          }
                           return PatientInfoCard(
-                            isExpanded: patientCubit.isExpanded,
-                            onToggleExpand: patientCubit.toggleExpandCollapse,
+                            isExpanded: patientState is PatientDataSuccess ? patientState.isExpanded : false,
+                            onToggleExpand: () => patientCubit.toggleExpandCollapse(),
                           );
                         },
                       ), // 🧩 Reusable card
@@ -240,7 +240,6 @@ class _BmiScreenState extends State<BmiScreen> {
   Widget _buildTextField(String label, TextEditingController controller) {
     return TextField(
       controller: controller,
-      onEditingComplete: calculateBmi,
       keyboardType: TextInputType.numberWithOptions(
         decimal: true,
         signed: false,
@@ -309,7 +308,7 @@ class _BmiScreenState extends State<BmiScreen> {
     return {
       "name": "BMI",
       "department": "Basic Health Checkup Report",
-      "bar_code": "243671063",
+      "bar_code": patient!.barcode,
       "parameters": [
         _parameter("Height", heightController.text, "Cm"),
         _parameter("Weight", weightController.text, "Kg(s)"),
@@ -327,8 +326,8 @@ class _BmiScreenState extends State<BmiScreen> {
   Map<String, dynamic> _parameter(String name, String value, String unit) {
     return {
       "name": name,
-      "uhid": "KA-256496983",
-      "bar_code": "243671063",
+      "uhid": patient!.uhid,
+      "bar_code": patient!.barcode,
       "parameter_group_name": "BMI",
       "machine_code": "243671063",
       "value": value,
@@ -337,13 +336,4 @@ class _BmiScreenState extends State<BmiScreen> {
     };
   }
 
-  void calculateBmi() {
-    if (heightController.text.isNotEmpty && weightController.text.isNotEmpty) {
-      int height = int.parse(heightController.text);
-      double size = height / 100;
-      double length = size * size;
-      int weight = int.parse(weightController.text);
-      bmiController.text = (weight / length).toStringAsFixed(3);
-    }
-  }
 }

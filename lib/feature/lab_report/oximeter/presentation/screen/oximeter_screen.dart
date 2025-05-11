@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:heath_genie/feature/lab_report/common/domain/entities/lab_report_parameter_entity.dart';
 import '../../../../../core/Depenency_injections/app_injector.dart';
 import '../../../../common/user/cubit/user_cubit.dart';
+import '../../../../detail/domain/entity/patient_model.dart';
 import '../../../../detail/presentation/cubit/patient_detail_cubit.dart';
 import '../../../../detail/presentation/cubit/patient_detail_state.dart';
 import '../../../../detail/presentation/widgets/patient_info_card.dart';
@@ -26,6 +27,7 @@ class _OximeterScreenState extends State<OximeterScreen> {
   final TextEditingController notesController = TextEditingController();
   late LabReportEntity oximeterEntity;
   late PatientDetailCubit patientCubit;
+  Patient? patient;
 
   @override
   void initState() {
@@ -50,7 +52,6 @@ class _OximeterScreenState extends State<OximeterScreen> {
           break;
         case 'Heart Rate':
           heartRateController.text = param.value;
-
           break;
         case 'Notes':
           notesController.text = param.value;
@@ -88,10 +89,9 @@ class _OximeterScreenState extends State<OximeterScreen> {
                 populateFields(oximeterEntity);
               } else if (state is OximeterSaveSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('BMI Data Saved Successfully')),
+                  const SnackBar(content: Text('Oximeter Data Saved Successfully')),
                 );
                 context.pop();
-
 
               } else if (state is OximeterSaveFailed) {
                 ScaffoldMessenger.of(
@@ -112,9 +112,12 @@ class _OximeterScreenState extends State<OximeterScreen> {
                         builder: (context, patientState) {
                           final patientCubit =
                           context.read<PatientDetailCubit>();
+                          if(patientState is PatientDataSuccess && patient==null) {
+                            patient = patientState.data;
+                          }
                           return PatientInfoCard(
-                            isExpanded: patientCubit.isExpanded,
-                            onToggleExpand: patientCubit.toggleExpandCollapse,
+                            isExpanded: patientState is PatientDataSuccess ? patientState.isExpanded : false,
+                            onToggleExpand: () => patientCubit.toggleExpandCollapse(),
                           );
                         },
                       ), // 🧩 Reusable card
@@ -126,7 +129,7 @@ class _OximeterScreenState extends State<OximeterScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 24),
                       const Text(
                         'SpO2 Level (%)',
                         style: TextStyle(
@@ -134,12 +137,12 @@ class _OximeterScreenState extends State<OximeterScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Expanded(
-                        child: _buildTextField(
-                          '', oxygenController,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
+                    SizedBox(
+                      height: 50,
+                      child: _buildTextField('', oxygenController),
+                    ),
+
+                      const SizedBox(width: 24),
                       const Text(
                         'Heart Rate (BPM)',
                         style: TextStyle(
@@ -147,18 +150,15 @@ class _OximeterScreenState extends State<OximeterScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Expanded(
-                        child: _buildTextField(
-                          '', heartRateController,
-                        ),
+                      SizedBox(
+                        height: 50,
+                        child: _buildTextField('', heartRateController),
                       ),
-
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
                       _buildMultilineTextField(
                         'Notes (Optional)',
                         notesController,
                       ),
-
                       const SizedBox(height: 32),
                       Row(
                         children: [
@@ -237,11 +237,10 @@ class _OximeterScreenState extends State<OximeterScreen> {
     return {
       "name": "OXIMETER",
       "department": "Basic Health Checkup Report",
-      "bar_code": "243671063",
+      "bar_code": patient!.barcode,
       "parameters": [
         _parameter("SPO2", oxygenController.text, "%"),
         _parameter("Heart Rate", heartRateController.text, "BPM"),
-        _parameter("Notes", notesController.text, ""),
       ],
     };
   }
@@ -249,8 +248,8 @@ class _OximeterScreenState extends State<OximeterScreen> {
   Map<String, dynamic> _parameter(String name, String value, String unit) {
     return {
       "name": name,
-      "uhid": "KA-256496983",
-      "bar_code": "243671063",
+      "uhid": patient!.uhid,
+      "bar_code": patient!.barcode,
       "parameter_group_name": "OXIMETER",
       "machine_code": "",
       "value": value,

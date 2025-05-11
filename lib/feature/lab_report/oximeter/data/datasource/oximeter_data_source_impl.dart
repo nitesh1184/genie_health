@@ -19,7 +19,7 @@ class OximeterDataSourceImpl extends OximeterDataSource{
       final token = storage.getString('token');
 
       final response = await DioHelper.putData(
-          path: '${Constants.Post_Report_API}$uhid',
+          path: '${Constants.Lab_Report_API}$uhid',
           token: token,
           data: requestBody
       );

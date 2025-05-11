@@ -1,12 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/error/failure.dart';
+import '../../../common/domain/entities/save_report_params.dart';
 import '../../../common/domain/usecase/bmi_get_usecase.dart';
 import '../../domain/usecase/oximeter_usecase.dart';
 import 'oximeter_state.dart';
-
-
-
 
 class OximeterCubit extends Cubit<OximeterState> {
   final OximeterUseCase saveOximeterUseCase;

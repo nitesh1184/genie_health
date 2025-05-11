@@ -1,8 +1,9 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heath_genie/feature/lab_report/spirometer/presentation/cubit/spirometer_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/error/failure.dart';
 import '../../../bmi/domain/usecase/post_emi_usecase.dart';
+import '../../../common/domain/entities/save_report_params.dart';
 import '../../../common/domain/usecase/bmi_get_usecase.dart';
 
 
@@ -22,7 +23,7 @@ class SpirometerCubit extends Cubit<SpirometerState> {
   Future<void> saveParameter(Map<String, dynamic> bmiRequestBody) async {
     emit(SpirometerSaving());
     final patientId = storage.getString("uid");
-    final result = await saveBmiUseCase(SaveBmiParams(bmiRequestBody: bmiRequestBody, uhid: patientId.toString()));
+    final result = await saveBmiUseCase(SaveParams(requestBody: bmiRequestBody, uhid: patientId.toString()));
 
     result.fold((failure) {
       if (failure is NoInternetFailure) {

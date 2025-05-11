@@ -43,7 +43,7 @@ class LoginScreen extends StatelessWidget {
               if (state is LoginSuccess) {
                 context.read<UserCubit>().saveUser(state.data);
                 Future.microtask(
-                  () => context.go('/home'),
+                      () => context.go('/home'),
                 ); // Navigate to HomeScreen
               }
             },
@@ -84,7 +84,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 24),
                       Container(
-                        padding: const EdgeInsets.all(24),
+                        padding: const EdgeInsets.only(top:24,bottom: 24, left: 12, right: 12),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
@@ -136,12 +136,12 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                   onPressed:
                                       () => {
-                                        context
-                                            .read<LoginCubit>()
-                                            .togglePasswordVisibility(
-                                              _obscurePassword,
-                                            ),
-                                      },
+                                    context
+                                        .read<LoginCubit>()
+                                        .togglePasswordVisibility(
+                                      _obscurePassword,
+                                    ),
+                                  },
                                 ),
                               ),
                             ),
@@ -167,11 +167,11 @@ class LoginScreen extends StatelessWidget {
                               child: AppGenieButton(
                                 onPressed:
                                     () => {
-                                      context.read<LoginCubit>().login(
-                                        emailController.text,
-                                        passwordController.text,
-                                      ),
-                                    },
+                                  context.read<LoginCubit>().login(
+                                    emailController.text,
+                                    passwordController.text,
+                                  ),
+                                },
                                 buttonText: 'Login',
                                 backgroundColor: const Color(0xFF0C7B79),
                               ),

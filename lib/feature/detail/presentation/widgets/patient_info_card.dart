@@ -35,23 +35,49 @@ class PatientInfoCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 16),
-                  if (isExpanded) ...[
-                    PatientInfoItem(title:'Name', value:patient.name),
-                    PatientInfoItem(title:'UHID', value:patient.uhid),
-                    PatientInfoItem(title:'Labour ID', value:patient.labourId),
-                    PatientInfoItem(title:'Age',value: '${patient.age} years'),
-                    PatientInfoItem(title:'Gender',value: patient.gender== 'M'? 'Male':'Female'),
-                    PatientInfoItem(title: 'Last Visit', value: '$randomNum Weeks ago'),
-                  ],
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: Icon(
-                        isExpanded ? Icons.expand_less : Icons.expand_more,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Left Column
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            PatientInfoItem(title: 'Name', value: patient.name),
+                            if (isExpanded)
+                              PatientInfoItem(title: 'Labour ID', value: patient.labourId),
+                            if (isExpanded)
+                              PatientInfoItem(
+                                  title: 'Gender',
+                                  value: patient.gender == 'M' ? 'Male' : 'Female'),
+                          ],
+                        ),
                       ),
+
+                      const SizedBox(width: 16),
+
+                      // Right Column
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            PatientInfoItem(title: 'UHID', value: patient.uhid),
+                            if (isExpanded)
+                              PatientInfoItem(title: 'Age', value: '${patient.age} years'),
+                            if (isExpanded)
+                              PatientInfoItem(title: 'Last Visit', value: '$randomNum Weeks ago'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Icon at bottom right
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: IconButton(
+                      icon: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
                       onPressed: onToggleExpand,
                     ),
                   ),

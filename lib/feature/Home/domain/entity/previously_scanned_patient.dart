@@ -31,6 +31,8 @@ class ScannedPatient extends Equatable {
   final String mobile;
   final String reportUrl;
   final String taluk;
+  final String village;
+  final String district;
   final String firstName;
   final String lastName;
   final DateTime dateOfBirth;
@@ -57,6 +59,8 @@ class ScannedPatient extends Equatable {
     required this.mobile,
     required this.reportUrl,
     required this.taluk,
+    required this.village,
+    required this.district,
     required this.firstName,
     required this.lastName,
     required this.dateOfBirth,
@@ -85,6 +89,8 @@ class ScannedPatient extends Equatable {
     mobile,
     reportUrl,
     taluk,
+    village,
+    district,
     firstName,
     lastName,
     dateOfBirth,
