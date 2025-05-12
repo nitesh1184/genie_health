@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:heath_genie/feature/lab_report/common/domain/entities/lab_report_parameter_entity.dart';
+
 import '../../../../../core/Depenency_injections/app_injector.dart';
 import '../../../../common/user/cubit/user_cubit.dart';
 import '../../../../detail/domain/entity/patient_model.dart';
@@ -9,58 +9,45 @@ import '../../../../detail/presentation/cubit/patient_detail_cubit.dart';
 import '../../../../detail/presentation/cubit/patient_detail_state.dart';
 import '../../../../detail/presentation/widgets/patient_info_card.dart';
 import '../../../../detail/presentation/widgets/top_bar.dart';
-import '../cubit/spirometer_cubit.dart';
-import '../cubit/spirometer_state.dart'; // your existing reusable widget
+import '../../../common/domain/entities/lab_report_parameter_entity.dart';
+import '../cubit/phlebotomy_cubit.dart';
+import '../cubit/phlebotomy_state.dart';
 
-class SpirometerScreen extends StatefulWidget {
-  const SpirometerScreen({super.key});
+class PhlebotomyScreen extends StatefulWidget {
+  const PhlebotomyScreen({super.key});
 
   @override
-  State<SpirometerScreen> createState() => _SpirometerScreenState();
+  State<PhlebotomyScreen> createState() => _PhlebotomyScreenState();
 }
 
-class _SpirometerScreenState extends State<SpirometerScreen> {
-  final TextEditingController fefController = TextEditingController();
-  final TextEditingController pefController = TextEditingController();
-  final TextEditingController fev1Controller = TextEditingController();
-  final TextEditingController fev6Controller = TextEditingController();
-  final TextEditingController notesController = TextEditingController();
-  late LabReportEntity spirometerEntity;
+class _PhlebotomyScreenState extends State<PhlebotomyScreen> {
+  final TextEditingController linkController = TextEditingController();
+  late LabReportEntity phlebotomyEntity;
   late PatientDetailCubit patientCubit;
+  late PhlebotomyCubit phlebotomyCubit;
   Patient? patient;
+  bool _checked=false;
 
   @override
   void initState() {
     super.initState();
     patientCubit = sl<PatientDetailCubit>();
+    phlebotomyCubit = sl<PhlebotomyCubit>();
   }
 
   @override
   void dispose() {
-    fefController.dispose();
-    pefController.dispose();
-    fev1Controller.dispose();
-    fev6Controller.dispose();
-    notesController.dispose();
+    linkController.dispose();
     super.dispose();
   }
 
   void populateFields(LabReportEntity report) {
     for (var param in report.parameters) {
-      switch (param.name) {
-        case 'FEF':
-          fefController.text = param.value;
-          break;
-        case 'PEF':
-          pefController.text = param.value;
-          break;
-        case 'FEV1':
-          fev1Controller.text = param.value;
-          notesController.text = param.comments;
-          break;
-        case 'FEV6':
-          fev6Controller.text = param.value;
-          break;
+      if (param.name == 'Blood Sample Successfully Collected') {
+        _checked = param.value.toLowerCase() == 'true';
+      }
+      if (param.name == 'Collection Site') {
+        linkController.text = param.value;
       }
     }
   }
@@ -71,8 +58,8 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
     final userName = user!.name;
     return MultiBlocProvider(
       providers: [
-        BlocProvider<SpirometerCubit>(
-          create: (_) => sl<SpirometerCubit>()..getSpirometerData(),
+        BlocProvider<PhlebotomyCubit>(
+          create: (_) => sl<PhlebotomyCubit>()..getPhlebotomyData(),
         ),
         BlocProvider<PatientDetailCubit>(
           create: (_) => patientCubit..getDetails(),
@@ -89,27 +76,34 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
               },
             ),
           ),
-          body: BlocConsumer<SpirometerCubit, SpirometerState>(
+          body: BlocConsumer<PhlebotomyCubit, PhlebotomyState>(
             listener: (context, state) {
-              if (state is SpirometerLoadSuccess) {
-                spirometerEntity = state.spirometerData;
-                populateFields(spirometerEntity);
-              } else if (state is SpirometerSaveSuccess) {
+              if (state is PhlebotomyLoadSuccess) {
+                phlebotomyEntity = state.phlebotomyData;
+                populateFields(phlebotomyEntity);
+              } else if (state is PhlebotomySaveSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Data Saved Successfully')),
+                  const SnackBar(
+                    content: Text('Phlebotomy Data Saved Successfully'),
+                  ),
                 );
                 context.pop();
-              } else if (state is SpirometerSaveFailed) {
+              } else if (state is PhlebotomySaveFailed) {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text(state.message)));
               }
+              else if (state is CheckBoxValueChanged) {
+                setState(() {
+                  _checked = state.isChecked;
+                });
+              }
             },
             builder: (context, state) {
-              if (state is SpirometerLoading) {
+              if (state is PhlebotomyLoading) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (state is SpirometerLoadSuccess ||
-                  state is SpirometerSaving) {
+              } else if ((state is PhlebotomyLoadSuccess ||
+                  state is PhlebotomySaving) || state is CheckBoxValueChanged ) {
                 return SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -119,7 +113,8 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
                         builder: (context, patientState) {
                           final patientCubit =
                               context.read<PatientDetailCubit>();
-                          if (patientState is PatientDataSuccess && patient==null) {
+                          if (patientState is PatientDataSuccess &&
+                              patient == null) {
                             patient = patientState.data;
                           }
                           return PatientInfoCard(
@@ -134,43 +129,41 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
                       ), // 🧩 Reusable card
                       const SizedBox(height: 16),
                       const Text(
-                        'Spirometer',
+                        'Phlebotomy',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF207D8B),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 24),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: _buildTextField('FEF', fefController),
+                          Checkbox(
+                            activeColor: Color(0xFF207D8B),
+                            value: _checked,
+                            onChanged: (value) {
+                              context.read<PhlebotomyCubit>().toggleCheckBox(value!);
+                            },
                           ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: _buildTextField('PEF', pefController),
-                          ),
+                          SizedBox(width: 12),
+                          const Text("Blood sample successfully collected"),
                         ],
                       ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildTextField('FEV1', fev1Controller),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: _buildTextField('FEV6', fev6Controller),
-                          ),
-                        ],
+                      const Text(
+                        'Collection Site',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      const SizedBox(height: 16),
-                      _buildMultilineTextField(
-                        'Notes (Optional)',
-                        notesController,
+                      SizedBox(
+                        height: 50,
+                        child: _buildTextField('', linkController),
                       ),
 
+                      const SizedBox(width: 24),
                       const SizedBox(height: 32),
                       Row(
                         children: [
@@ -186,31 +179,23 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF005D57),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                final requestBody = _prepareRequest();
+                                context.read<PhlebotomyCubit>().saveParameter(
+                                  requestBody,
+                                );
+                              },
                               icon: const Icon(
-                                Icons.device_unknown_rounded,
+                                Icons.save_outlined,
                                 color: Colors.white,
                               ),
                               label: const Text(
-                                'Device View',
+                                'Save',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
                         ],
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            final requestBody = _prepareRequest();
-                            context.read<SpirometerCubit>().saveParameter(
-                              requestBody,
-                            );
-                          },
-                          child: const Text('Save Reading'),
-                        ),
                       ),
                     ],
                   ),
@@ -239,30 +224,17 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
     );
   }
 
-  Widget _buildMultilineTextField(
-    String label,
-    TextEditingController controller,
-  ) {
-    return TextField(
-      controller: controller,
-      maxLines: 3,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-      ),
-    );
-  }
-
   Map<String, dynamic> _prepareRequest() {
     return {
-      "name": "SPIROMETER",
+      "name": "PHLEBOTOMY",
       "department": "Basic Health Checkup Report",
       "bar_code": patient!.barcode,
       "parameters": [
-        _parameter("FEF", fefController.text, ""),
-        _parameter("PEF", pefController.text, ""),
-        _parameter("FEV1", fev1Controller.text, ""),
-        _parameter("FEV6", fev6Controller.text, ""),
+        _parameter(
+          "Blood Sample Successfully Collected",
+          _checked ? 'true' : 'false',
+          "",
+        ),
       ],
     };
   }
@@ -272,11 +244,11 @@ class _SpirometerScreenState extends State<SpirometerScreen> {
       "name": name,
       "uhid": patient!.uhid,
       "bar_code": patient!.barcode,
-      "parameter_group_name": "SPIROMETER",
+      "parameter_group_name": "PHLEBOTOMY",
       "machine_code": "",
       "value": value,
       "unit": unit,
-      "comments": notesController.text,
+      "comments": "",
     };
   }
 }

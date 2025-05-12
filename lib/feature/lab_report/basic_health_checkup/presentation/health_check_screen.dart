@@ -23,7 +23,7 @@ class _HealthCheckScreenState extends State<HealthCheckScreen> {
   late PatientDetailCubit patientCubit;
   late HealthCheck healthReport;
   Patient? patient;
-  late String unit='';
+  late String unit = '';
   final Map<String, TextEditingController> controllers = {};
   final TextEditingController weightController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
@@ -60,16 +60,15 @@ class _HealthCheckScreenState extends State<HealthCheckScreen> {
   }
 
   void populateFields(HealthCheck report) {
-
     for (var group in report.arogyaParametersGroup) {
-      for(var param in group.arogyaParameter) {
+      for (var param in group.arogyaParameter) {
         switch (param.name) {
           case 'Weight':
             weightController.text = param.value;
             break;
           case 'Height':
             heightController.text = param.value;
-            unit=param.unit;
+            unit = param.unit;
             break;
           case 'BMI':
             bmiController.text = param.value;
@@ -120,21 +119,19 @@ class _HealthCheckScreenState extends State<HealthCheckScreen> {
             fev6Controller.text = param.value;
             break;
         }
-
       }
     }
 
-    if(unit=='Cm'){
-      final weight = double.tryParse(weightController.text ?? '');
-      final height = double.tryParse(heightController.text ?? '');
-      final bmi=calculateBmi(weightKg: weight,heightCm: height);
-      bmiController.text= bmi!.toStringAsFixed(2);
-    }
-    else{
-      final weight = double.tryParse(weightController.text ?? '');
-      final height = double.tryParse(heightController.text ?? '');
-      final bmi=calculateBmi(weightKg: weight,heightFeet: height);
-      bmiController.text= bmi!.toStringAsFixed(2);
+    if (unit.toLowerCase() == 'cm') {
+      final weight = double.tryParse(weightController.text);
+      final height = double.tryParse(heightController.text);
+      final bmi = calculateBmi(weightKg: weight, heightCm: height);
+      bmiController.text = bmi!.toStringAsFixed(2);
+    } else {
+      final weight = double.tryParse(weightController.text);
+      final height = double.tryParse(heightController.text);
+      final bmi = calculateBmi(weightKg: weight, heightFeet: height);
+      bmiController.text = bmi!.toStringAsFixed(2);
     }
   }
 
@@ -227,6 +224,7 @@ class _HealthCheckScreenState extends State<HealthCheckScreen> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
+                          color: Color(0xFF207D8B),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -335,28 +333,32 @@ class _HealthCheckScreenState extends State<HealthCheckScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      _buildTextField('Basal Metabolic Age', basalTextController, false),
+                      _buildTextField(
+                        'Basal Metabolic Age',
+                        basalTextController,
+                        false,
+                      ),
                       const SizedBox(height: 16),
-                      _buildTextField('Heart Sounds', heartSoundController, false),
+                      _buildTextField(
+                        'Heart Sounds',
+                        heartSoundController,
+                        false,
+                      ),
                       const SizedBox(height: 16),
-                      _buildTextField('Abdomen', abdomenSoundsController, false),
+                      _buildTextField(
+                        'Abdomen',
+                        abdomenSoundsController,
+                        false,
+                      ),
                       const SizedBox(height: 16),
                       Row(
                         children: [
                           Expanded(
-                            child: _buildTextField(
-                              'FEF',
-                              fefController,
-                              false,
-                            ),
+                            child: _buildTextField('FEF', fefController, false),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: _buildTextField(
-                              'PEF',
-                             pefController,
-                              false,
-                            ),
+                            child: _buildTextField('PEF', pefController, false),
                           ),
                         ],
                       ),
@@ -396,26 +398,12 @@ class _HealthCheckScreenState extends State<HealthCheckScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF005D57),
                               ),
-                              onPressed: () {
-                                final requestBody = {
-                                  "parameters":
-                                      healthReport.arogyaParametersGroup
-                                          .expand((g) => g.arogyaParameter)
-                                          .map(
-                                            (p) => {
-                                              "id": p.id,
-                                              "value":
-                                                  controllers[p.id]?.text ?? '',
-                                            },
-                                          )
-                                          .toList(),
-                                };
-                                context.read<HealthCheckCubit>().saveParameter(
-                                  requestBody,
-                                );
-                              },
+                              onPressed: () {},
                               icon: const Icon(Icons.lock_outline),
-                              label: const Text('Save Reading'),
+                              label: const Text(
+                                'Save Reading',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ],
@@ -455,7 +443,10 @@ class _HealthCheckScreenState extends State<HealthCheckScreen> {
               decimal: true,
               signed: false,
             ),
-            decoration: InputDecoration(border: const OutlineInputBorder()),
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              fillColor: readOnly ? Colors.black45 : Colors.white,
+            ),
           ),
         ),
       ],

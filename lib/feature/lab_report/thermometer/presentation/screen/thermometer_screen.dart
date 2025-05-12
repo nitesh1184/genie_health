@@ -129,7 +129,8 @@ class _ThermometerScreenState extends State<ThermometerScreen> {
                         children: [
                           const Text(
                             "Thermometer",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,
+                              color: Color(0xFF207D8B),),
                           ),
                           OutlinedButton(
                             onPressed: () => thermometerCubit.toggleUnit(),
@@ -186,11 +187,19 @@ class _ThermometerScreenState extends State<ThermometerScreen> {
                         ),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // TODO: Add device view logic
-                            },
-                            child: const Text('Device View'),
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF005D57),
+                            ),
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.device_unknown_rounded,
+                              color: Colors.white,
+                            ),
+                            label: const Text(
+                              'Device View',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ],

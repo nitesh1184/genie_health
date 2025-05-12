@@ -27,9 +27,6 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => UserCubit()..loadUser(),
         ),
-        BlocProvider(
-          create: (context) => SpyroCubit(),
-        ), // Global UserCubit// Screen-Specific Cubit
       ],
       child: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, themeState) {

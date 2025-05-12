@@ -13,10 +13,11 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 4),
-            () =>
-                context.push('/login')
-            );
+
+    Future.delayed(Duration(seconds: 3), () {
+      if (!mounted) return; // ✅ Prevents calling context if widget is disposed
+      context.go('/login');
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -44,19 +45,10 @@ class SplashScreenState extends State<SplashScreen> {
                 ),
               ),
               const SizedBox(height: 40),
-              Container(
-                height: 200,
-                width: 200,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFBDE3E7), // Light cyan background
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Image.asset(
-                    'assets/images/doctors_team.jpg', // Replace with your image path
-                    fit: BoxFit.contain,
-                  ),
+              CircleAvatar(
+                radius: 80,
+                backgroundImage: AssetImage(
+                  'assets/images/doctors_team.jpg',
                 ),
               ),
             ],

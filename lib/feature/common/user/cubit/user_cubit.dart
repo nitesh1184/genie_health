@@ -36,7 +36,7 @@ class UserCubit extends Cubit<UserHandler?> {
 
   Future<void> clearUser() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('user');
+    await prefs.clear();
     emit(null);
   }
 }

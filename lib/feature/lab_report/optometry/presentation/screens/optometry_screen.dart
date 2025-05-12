@@ -143,6 +143,7 @@ class _OptometryScreenState extends State<OptometryScreen> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color: Color(0xFF207D8B),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -229,11 +230,19 @@ class _OptometryScreenState extends State<OptometryScreen> {
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // TODO: Implement device view
-                              },
-                              child: const Text('Device View'),
+                            child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF005D57),
+                              ),
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.device_unknown_rounded,
+                                color: Colors.white,
+                              ),
+                              label: const Text(
+                                'Device View',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ],

@@ -29,8 +29,8 @@ class ScannedPatientListWidget extends StatelessWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${patient.age} Y /${patient.gender}'== "M"? 'Male':'Female' ),
-                      Text('location - ${DateFormat.yMd('es').format(patient.registrationDate)}'),
+                      Text('${patient.age} Y / ${patient.gender.toLowerCase() == "m" ? "Male" : "Female"}'),
+                      Text('${patient.district} - ${DateFormat.yMd('es').format(patient.registrationDate)}'),
                     ],
                   ),
                   trailing: Column(

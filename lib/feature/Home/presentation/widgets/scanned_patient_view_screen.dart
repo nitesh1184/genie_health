@@ -113,6 +113,7 @@ class PatientView extends StatelessWidget {
   }
   void _logout(BuildContext context) async {
     final go = context.go; // Capture before await
+    await context.read<UserCubit>().clearUser();
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     go('/login'); // Use safely after async

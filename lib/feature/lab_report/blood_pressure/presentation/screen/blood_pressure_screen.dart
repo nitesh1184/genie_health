@@ -11,7 +11,7 @@ import '../../../../detail/presentation/widgets/patient_info_card.dart';
 import '../../../../detail/presentation/widgets/top_bar.dart';
 import '../cubit/blood_pressure_cubit.dart';
 import '../cubit/blood_pressure_state.dart';
- // your existing reusable widget
+// your existing reusable widget
 
 class BloodPressureScreen extends StatefulWidget {
   const BloodPressureScreen({super.key});
@@ -44,7 +44,6 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
 
   void populateFields(LabReportEntity report) {
     for (var param in report.parameters) {
-
       switch (param.name) {
         case 'Systolic':
           systolicController.text = param.value;
@@ -65,7 +64,9 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
     final userName = user!.name;
     return MultiBlocProvider(
       providers: [
-        BlocProvider<BloodPressureCubit>(create: (_) => sl<BloodPressureCubit >()..getBloodPressureData()),
+        BlocProvider<BloodPressureCubit>(
+          create: (_) => sl<BloodPressureCubit>()..getBloodPressureData(),
+        ),
         BlocProvider<PatientDetailCubit>(
           create: (_) => patientCubit..getDetails(),
         ),
@@ -81,7 +82,7 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
               },
             ),
           ),
-          body: BlocConsumer<BloodPressureCubit , BloodPressureState>(
+          body: BlocConsumer<BloodPressureCubit, BloodPressureState>(
             listener: (context, state) {
               if (state is BloodPressureLoadSuccess) {
                 bloodPressureEntity = state.bloodPressureData;
@@ -91,8 +92,6 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
                   const SnackBar(content: Text('Data Saved Successfully')),
                 );
                 context.pop();
-
-
               } else if (state is BloodPressureSaveFailed) {
                 ScaffoldMessenger.of(
                   context,
@@ -102,7 +101,8 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
             builder: (context, state) {
               if (state is BloodPressureLoading) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (state is BloodPressureLoadSuccess || state is BloodPressureSaving) {
+              } else if (state is BloodPressureLoadSuccess ||
+                  state is BloodPressureSaving) {
                 return SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -111,13 +111,18 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
                       BlocBuilder<PatientDetailCubit, PatientDataState>(
                         builder: (context, patientState) {
                           final patientCubit =
-                          context.read<PatientDetailCubit>();
-                          if(patientState is PatientDataSuccess && patient == null) {
+                              context.read<PatientDetailCubit>();
+                          if (patientState is PatientDataSuccess &&
+                              patient == null) {
                             patient = patientState.data;
                           }
                           return PatientInfoCard(
-                            isExpanded: patientState is PatientDataSuccess ? patientState.isExpanded : false,
-                            onToggleExpand: () => patientCubit.toggleExpandCollapse(),
+                            isExpanded:
+                                patientState is PatientDataSuccess
+                                    ? patientState.isExpanded
+                                    : false,
+                            onToggleExpand:
+                                () => patientCubit.toggleExpandCollapse(),
                           );
                         },
                       ), // 🧩 Reusable card
@@ -127,12 +132,16 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color: Color(0xFF207D8B),
                         ),
                       ),
                       const SizedBox(height: 8),
                       const Text(
                         'Systolic Pressure (mmHg)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       SizedBox(
                         height: 50,
@@ -141,7 +150,10 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
                       const SizedBox(height: 16),
                       const Text(
                         'diastolic Pressure (mmHg)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       SizedBox(
                         height: 50,
@@ -165,11 +177,19 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // TODO: Implement device view
-                              },
-                              child: const Text('Device View'),
+                            child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF005D57),
+                              ),
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.device_unknown_rounded,
+                                color: Colors.white,
+                              ),
+                              label: const Text(
+                                'Device View',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ],
@@ -180,7 +200,9 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             final requestBody = _prepareRequest();
-                            context.read<BloodPressureCubit>().saveParameter(requestBody);
+                            context.read<BloodPressureCubit>().saveParameter(
+                              requestBody,
+                            );
                           },
                           child: const Text('Save Reading'),
                         ),
@@ -213,9 +235,9 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
   }
 
   Widget _buildMultilineTextField(
-      String label,
-      TextEditingController controller,
-      ) {
+    String label,
+    TextEditingController controller,
+  ) {
     return TextField(
       controller: controller,
       maxLines: 3,
@@ -225,8 +247,6 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
       ),
     );
   }
-
-
 
   Map<String, dynamic> _prepareRequest() {
     return {
@@ -242,15 +262,14 @@ class _BloodPressureScreenState extends State<BloodPressureScreen> {
 
   Map<String, dynamic> _parameter(String name, String value, String unit) {
     return {
-    "name": name,
-    "uhid": patient!.uhid,
-    "bar_code": patient!.barcode,
-    "parameter_group_name": "BLOOD PRESSURE",
-    "machine_code": "",
-    "value": value,
-    "unit": unit,
-    "comments": notesController.text,
+      "name": name,
+      "uhid": patient!.uhid,
+      "bar_code": patient!.barcode,
+      "parameter_group_name": "BLOOD PRESSURE",
+      "machine_code": "",
+      "value": value,
+      "unit": unit,
+      "comments": notesController.text,
     };
   }
-
 }

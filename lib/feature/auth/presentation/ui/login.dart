@@ -29,6 +29,9 @@ class LoginScreen extends StatelessWidget {
           body: BlocConsumer<LoginCubit, LoginState>(
             listener: (context, state) {
               if (state is LoginFailure) {
+                if (Navigator.of(context, rootNavigator: true).canPop()) {
+                  Navigator.of(context, rootNavigator: true).pop(); // Dismiss progress dialog
+                }
                 showDialogBox(context, state.message);
               } else if (state is LoginLoading) {
                 showDialog(
@@ -41,6 +44,9 @@ class LoginScreen extends StatelessWidget {
                 _obscurePassword=state.visibility;
               }
               if (state is LoginSuccess) {
+                if (Navigator.of(context, rootNavigator: true).canPop()) {
+                  Navigator.of(context, rootNavigator: true).pop(); // Dismiss progress dialog
+                }
                 context.read<UserCubit>().saveUser(state.data);
                 Future.microtask(
                       () => context.go('/home'),

@@ -99,7 +99,12 @@ class ScreeningGrid extends StatelessWidget {
          context.push("/basic");
          break;
        }
+       case "Phlebotomy": {
+         context.push("/phlebotomy");
+         break;
+       }
        default:{
+
        }
      }
   }

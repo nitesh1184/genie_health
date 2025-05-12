@@ -66,6 +66,12 @@ import '../../feature/lab_report/oximeter/data/repository/oximeter_repository_im
 import '../../feature/lab_report/oximeter/domain/repository/oximeter_repository.dart';
 import '../../feature/lab_report/oximeter/domain/usecase/oximeter_usecase.dart';
 import '../../feature/lab_report/oximeter/presentation/cubit/oximeter_cubit.dart';
+import '../../feature/lab_report/phlebotomy/data/datasource/phlebotomy_data_source.dart';
+import '../../feature/lab_report/phlebotomy/data/datasource/phlebotomy_data_source_impl.dart';
+import '../../feature/lab_report/phlebotomy/data/repository/phlebotomy_repository_impl.dart';
+import '../../feature/lab_report/phlebotomy/domain/repository/phlebotomy_repository.dart';
+import '../../feature/lab_report/phlebotomy/domain/usecase/phlebotomy_usecase.dart';
+import '../../feature/lab_report/phlebotomy/presentation/cubit/phlebotomy_cubit.dart';
 import '../../feature/lab_report/spirometer/data/datasource/spirometer_data_source_impl.dart';
 import '../../feature/lab_report/spirometer/data/repository/spirometer_repository_impl.dart';
 import '../../feature/lab_report/spirometer/presentation/cubit/spirometer_cubit.dart';
@@ -132,6 +138,10 @@ Future<void> setupLocator() async {
         () => HealthCheckRepositoryImpl(healthCheckDataSource: sl()),
   );
 
+  sl.registerLazySingleton<PhlebotomyRepository>(
+        () => PhlebotomyRepositoryImpl(phlebotomyDataSource: sl()),
+  );
+
   // Register Use Case
   sl.registerLazySingleton<LoginUseCase>(
     () => LoginUseCase(loginRepository: sl()),
@@ -180,6 +190,12 @@ Future<void> setupLocator() async {
         () => HealthCheckUseCase(repository: sl()),
   );
 
+  sl.registerLazySingleton<PhlebotomyUseCase>(
+        () => PhlebotomyUseCase(repository: sl()),
+  );
+
+
+
   //Register cubit
   sl.registerLazySingleton<UserCubit>(() => UserCubit());
   sl.registerFactory(() => LoginCubit(sl(), sl(), sl()));
@@ -193,6 +209,7 @@ Future<void> setupLocator() async {
   sl.registerFactory(() => StethoscopeCubit(saveBloodPressureUseCase: sl(), reportUseCase: sl(), storage: sl()));
   sl.registerFactory(() => OptometryCubit(saveOptometryUseCase: sl(), reportUseCase: sl(), storage: sl()));
   sl.registerFactory(() => HealthCheckCubit(storage: sl(), reportUseCase: sl()));
+  sl.registerFactory(() => PhlebotomyCubit(savePhlebotomyUseCase: sl(), reportUseCase: sl(), storage: sl()));
 
   //Register DataSource
   sl.registerLazySingleton<LoginDataSource>(
@@ -232,6 +249,10 @@ Future<void> setupLocator() async {
   );
   sl.registerLazySingleton<OptometryDataSource>(
         () => OptometryDataSourceImpl(),
+  );
+
+  sl.registerLazySingleton<PhlebotomyDataSource>(
+        () => PhlebotomyDataSourceImpl(),
   );
 
   sl.registerLazySingleton<HealthCheckDataSource>(
